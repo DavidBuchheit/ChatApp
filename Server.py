@@ -23,7 +23,16 @@ database = lite.connect('user.db')
 ###########################
 
 def initiation():
+    print("Server started.")
     while 1:
+        SessionData = {
+            'id': '',
+            'FirstName': '',
+            'LastName': '',
+            'LastActive': '',
+        }
+
+        print("Server ready to accept connections.")
         connectionSocket, addr = serverSocket.accept()
         print(addr)
         start_new_thread(main, (connectionSocket,))
@@ -33,30 +42,31 @@ def main(connectionSocket):
     request = connectionSocket.recv(1024).decode('ascii')
 
 
+# SendMessage \t Message \r\n
 def sendMessage():
     print("sendMessage")
 
-
+# SendPrivateMessage \t Sender \t Receiver \t Message
 def sendPrivateMessage():
     print("sendPrivateMessage")
 
-
+# RegisterUser \t FirstName \t LastName \t Address \t Email \t password1 \t password2 \r\n
 def RegisterUser():
     print("RegisterUser")
 
-
+# CheckLogin \t Username \t Password \r\n
 def loginCheck():
     print("checkUser")
 
-
+# FriendsList \r\n
 def printFriendsList():
     print("printFriendsList")
 
-
+# FriendStatus \t Requester \t Friend \r\n
 def getFriendStatus():
     print("getFriendStatus")
 
-
+# OfflineMessages \r\n
 def getOfflineMessages():
     print("getOfflineMessages")
 
