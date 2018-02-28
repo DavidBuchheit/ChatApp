@@ -2,6 +2,7 @@
 
 import sqlite3 as lite
 from socket import *
+from _thread import *
 
 #list = database.execute("SELECT * FROM User")
 # list = list.fetchall()
@@ -13,12 +14,23 @@ serverSocket = socket(AF_INET,SOCK_STREAM)
 serverSocket.bind(('', serverPort))
 serverSocket.listen(10)
 database = lite.connect('user.db')
-def main():
+
+############################
+# Responses: Type \t Failure OR Success \r\n
+#        Ex: SendMessage \t Success \r\n
+#  Requests: Type \t Data \r\n
+#        Ex: RegisterUser \t FirstName \t LastName \t Address \t Email \t password1 \t password2 \r\n
+###########################
+
+def initiation():
+    while 1:
+        connectionSocket, addr = serverSocket.accept()
+        print(addr)
+        start_new_thread(main, (connectionSocket,))
+
+def main(connectionSocket):
     print("main")
-
-
-
-
+    request = connectionSocket.recv(1024).decode('ascii')
 
 
 def sendMessage():
@@ -50,4 +62,4 @@ def getOfflineMessages():
 
 
 if __name__ == '__main__':
-    main()
+    initiation()

@@ -113,6 +113,7 @@ class RegisterApp(Frame):
     def toLogin(self):
         self.controller.show_frame("LoginApp")
 
+
 if __name__ == "__main__":
     app = Application()
     app.mainloop()
