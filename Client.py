@@ -9,7 +9,8 @@ class Application(Tk):
         self.title("Group Chat")
         self.iconbitmap('groupIcon.ico')
         self.geometry("320x600")
-        self.resizable(0, 0)
+        self.minsize(320, 400)
+        self.resizable(0, 1)
 
         # the container is where we'll stack a bunch of frames
         # on top of each other, then the one we want visible
