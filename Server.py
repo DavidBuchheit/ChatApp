@@ -12,6 +12,7 @@ serverSocket = socket(AF_INET,SOCK_STREAM)
 serverSocket.bind(('', serverPort))
 serverSocket.listen(10)
 
+UserConnectionList = []
 ############################
 # Responses: Type \t Failure OR Success \r\n
 #        Ex: SendMessage \t Success \r\n
@@ -33,19 +34,22 @@ def initiation():
 def main(connectionSocket):
     print("main")
     # request = connectionSocket.recv(1024).decode('ascii')
-    RegisterUser("", connectionSocket)
+    #RegisterUser("", connectionSocket)
     SessionData = {
         'id': '',
         'FirstName': '',
         'LastName': '',
         'LastActive': '',
     }
+    UserConnectionList.append(SessionData)
+
 
 
 # SendMessage \t Message \r\n
 # SendMessage \t Success \r\n
 # SendMessage \t Failure \r\n
 def sendMessage():
+
     print("sendMessage")
 
 
@@ -72,8 +76,8 @@ def RegisterUser(request, connectionSocket):
     values = (firstName, lastName, address, email, email)
     check = database.cursor()
     test = check.execute("SELECT COUNT(*)" +
-                            "FROM User "
-                            "WHERE " +
+                            " FROM User" +
+                            " WHERE " +
                             "( firstName = ? AND lastName = ? AND address = ?) OR email = ?", values)
 
     if test.fetchone()[0] > 0: #if user already has info in DB. Send failure response
@@ -89,15 +93,31 @@ def RegisterUser(request, connectionSocket):
 
         insert = cur.execute("insert into User('firstName', 'lastName', 'address', 'email', 'password') values (?, ?, ?, ?, ?)", values)
         print(cur.fetchall())
+    database.close()
 
 
-
-
-# CheckLogin \t Username \t Password \r\n
+# CheckLogin \t email \t Password \r\n
 # CheckLogin \t Success \r\n
 # CheckLogin \t Failure \r\n
-def loginCheck():
-    print("checkUser")
+def loginCheck(request, connectionSocket):
+    database = lite.connect('Users.db')
+    email = ""
+    password = ""
+    loginValues = (email, password)
+    loginCheck = database.execute("SELECT COUNT(*) FROM User WHERE email = ? AND password = ?", loginValues)
+    if loginCheck.fetchone()[0] > 0:
+        connectionSocket.send("CheckLogin \t Success \r\n".encode())
+        database.close()
+        return ["Failure"]
+    else:
+        infoValues = email
+        information = database.execute("SELECT id, firstName, lastName FROM User WHERE email = ?", infoValues)
+        information = information.fetchone()
+        connectionSocket.send("CheckLogin \t Failure \r\n".encode())
+        database.close()
+        return ["Success", connectionSocket[0], connectionSocket[1], connectionSocket[2]]
+
+
 
 
 # FriendsList \r\n
