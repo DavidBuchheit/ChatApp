@@ -7,7 +7,7 @@ from datetime import *
 from time import *
 
 
-serverPort = 12009
+serverPort = 12010
 serverSocket = socket(AF_INET,SOCK_STREAM)
 serverSocket.bind(('', serverPort))
 serverSocket.listen(10)
@@ -34,7 +34,7 @@ def initiation():
 def main(connectionSocket):
     print("main")
     # request = connectionSocket.recv(1024).decode('ascii')
-    #RegisterUser("", connectionSocket)
+    RegisterUser("", connectionSocket)
     SessionData = {
         'id': '',
         'FirstName': '',
@@ -64,36 +64,33 @@ def sendPrivateMessage():
 # RegisterUser \t Success \r\n
 # RegisterUser \t Failure \r\n
 def RegisterUser(request, connectionSocket):
-    database = lite.connect('Users.db')
+    database = lite.connect('user.db')
     print("Register user")
-    firstName = 'David23'
-    lastName = 'Buchhei12t'
-    address = 'address0jj1'
-    email = 'asdkj'
-    password = '1234125'
+    firstName = ""
+    lastName = ""
+    address = ""
+    email = ""
+    password = ""
     # Query for checking if user has an account already
     # Checks if all the current data exists and checks if email already is in database
-    values = (firstName, lastName, address, email, email)
+    values = (firstName, lastName, address, email)
     check = database.cursor()
-    test = check.execute("SELECT COUNT(*)" +
-                            " FROM User" +
-                            " WHERE " +
-                            "( firstName = ? AND lastName = ? AND address = ?) OR email = ?", values)
-
+    test = check.execute("SELECT COUNT(*) FROM user WHERE ( firstName = ? AND lastName = ? AND address = ?) OR email = ?", values)
     if test.fetchone()[0] > 0: #if user already has info in DB. Send failure response
         print("Registration failure")
         response = "RegisterUser\tFailure\r\n"
         connectionSocket.send(response.encode())
+        database.close()
+        return ["Failure"]
     else:
         print("Registration successful")
-        values = (firstName, lastName, address, email, password)
-
-
+        vals = [firstName, lastName, address, email, password]
         cur = database.cursor()
-
-        insert = cur.execute("insert into User('firstName', 'lastName', 'address', 'email', 'password') values (?, ?, ?, ?, ?)", values)
-        print(cur.fetchall())
-    database.close()
+        insert = cur.execute("insert into user(firstName, lastName, address, email, password) values (?, ?, ?, ?, ?)", vals)
+        lastRowID = cur.lastrowid
+        database.commit()
+        database.close()
+        return ["Success", lastRowID, vals[0], vals[1], vals[3]]
 
 
 # CheckLogin \t email \t Password \r\n
@@ -104,21 +101,18 @@ def loginCheck(request, connectionSocket):
     email = ""
     password = ""
     loginValues = (email, password)
-    loginCheck = database.execute("SELECT COUNT(*) FROM User WHERE email = ? AND password = ?", loginValues)
+    loginCheck = database.execute("SELECT COUNT(*) FROM user WHERE email = ? AND password = ?", loginValues)
     if loginCheck.fetchone()[0] > 0:
         connectionSocket.send("CheckLogin \t Success \r\n".encode())
         database.close()
         return ["Failure"]
     else:
         infoValues = email
-        information = database.execute("SELECT id, firstName, lastName FROM User WHERE email = ?", infoValues)
+        information = database.execute("SELECT id, firstName, lastName FROM user WHERE email = ?", infoValues)
         information = information.fetchone()
         connectionSocket.send("CheckLogin \t Failure \r\n".encode())
         database.close()
-        return ["Success", connectionSocket[0], connectionSocket[1], connectionSocket[2]]
-
-
-
+        return ["Success", information[0], information[1], information[2]]
 
 # FriendsList \r\n
 # FriendsList \t Success \t Array Of Friends \r\n
