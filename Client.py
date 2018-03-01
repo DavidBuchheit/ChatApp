@@ -21,15 +21,16 @@ class Application(Tk):
 
         self.serverPort = 12009
         self.serverName = "localhost" #I.P Address
-        clientSocket = socket(AF_INET, SOCK_STREAM)
+        self.clientSocket = socket(AF_INET, SOCK_STREAM)
         connected = False
         try:
-            clientSocket.connect((self.serverName, self.serverPort))
+            self.clientSocket.connect((self.serverName, self.serverPort))
             connected = True
         except Exception as e:
-            print("Something went wrong")
+            print("Something went wrong:")
+            print(e)
             connected = False
-            clientSocket.close()
+            self.clientSocket.close()
 
         self.frames = {}
         for F in (FailedConnection, LoginApp, RegisterApp):
@@ -73,15 +74,16 @@ class FailedConnection(Frame):
 
     def reconnect(self):
         print("Trying to reconnect...")
-        clientSocket = socket(AF_INET, SOCK_STREAM)
+        self.controller.clientSocket = socket(AF_INET, SOCK_STREAM)
         connected = False
         try:
-            clientSocket.connect((self.controller.serverName, self.controller.serverPort))
+            self.controller.clientSocket.connect((self.controller.serverName, self.controller.serverPort))
             connected = True
         except Exception as e:
-            print("Something went wrong")
+            print("Something went wrong:")
+            print(e)
             connected = False
-            clientSocket.close()
+            self.controller.clientSocket.close()
 
         if(connected):
             self.controller.show_frame("LoginApp")
