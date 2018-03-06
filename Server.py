@@ -24,7 +24,7 @@ def main():
 
 =======
 serverPort = 12010
-serverSocket = socket(AF_INET, SOCK_STREAM)
+serverSocket = socket(AF_INET,SOCK_STREAM)
 serverSocket.bind(('', serverPort))
 serverSocket.listen(10)
 
@@ -41,6 +41,7 @@ UserConnectionList = []
 >>>>>>> 9bb6c7d57c9dd7b78e63dab4a4bca1f9d14475f5
 ###########################
 
+<<<<<<< HEAD
 def initiation():
     while 1:
         connectionSocket, addr = serverSocket.accept()
@@ -52,6 +53,8 @@ def main(connectionSocket):
     print("main")
     request = connectionSocket.recv(1024).decode('ascii')
 =======
+=======
+>>>>>>> parent of 9bb6c7d... tiny changes
 def initiation():
     print("Server started.")
     print(time())
@@ -73,10 +76,6 @@ def main(connectionSocket):
         'LastName': '',
         'LastActive': '',
     }
-    request = "RegisterUser\tFirstName\tLastName\tAddress\tEmail\tpassword\r\n"
-    type = request.split("\t")
-    if type[0] == "RegisterUser":
-        print("as")
     UserConnectionList.append(SessionData)
 
 
@@ -111,7 +110,7 @@ def RegisterUser(request, connectionSocket):
     # Checks if all the current data exists and checks if email already is in database
     values = (firstName, lastName, address, email)
     check = database.cursor()
-    test = check.execute("select count(*) from user where ( firstName = ? and lastName = ? and address = ?) or email = ?", values)
+    test = check.execute("SELECT COUNT(*) FROM user WHERE ( firstName = ? AND lastName = ? AND address = ?) OR email = ?", values)
     if test.fetchone()[0] > 0: #if user already has info in DB. Send failure response
         print("Registration failure")
         response = "RegisterUser\tFailure\r\n"
@@ -137,14 +136,14 @@ def loginCheck(request, connectionSocket):
     email = ""
     password = ""
     loginValues = (email, password)
-    loginCheck = database.execute("select count(*) from user where email = ? and password = ?", loginValues)
+    loginCheck = database.execute("SELECT COUNT(*) FROM user WHERE email = ? AND password = ?", loginValues)
     if loginCheck.fetchone()[0] > 0:
         connectionSocket.send("CheckLogin \t Success \r\n".encode())
         database.close()
         return ["Failure"]
     else:
         infoValues = email
-        information = database.execute("select id, firstName, lastName from user where email = ?", infoValues)
+        information = database.execute("SELECT id, firstName, lastName FROM user WHERE email = ?", infoValues)
         information = information.fetchone()
         connectionSocket.send("CheckLogin \t Failure \r\n".encode())
         database.close()
@@ -175,14 +174,7 @@ def getFriendStatus():
 # ArraySchema: User, Message, Time
 def getOfflineMessages():
     print("getOfflineMessages")
-    #Grab all messages where their logout time is less than all messages
-
-# Logout \r\n
-# Logout \t Success \r\n
-# Logout \t Failure \r\n
-def logout():
-    print("Logout")
-    #update DB where their last online time is now and remove them from current users array
+    print()
 
 if __name__ == '__main__':
     initiation()
