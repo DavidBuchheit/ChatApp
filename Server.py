@@ -41,6 +41,7 @@ def main(connectionSocket):
         'FirstName': '',
         'LastName': '',
         'LastActive': '',
+        'connectionSocket': None
     }
     request = "RegisterUser\tFirstName\tLastName\tAddress\tEmail\tpassword\r\n"
     type = request.split("\t")
@@ -51,11 +52,24 @@ def main(connectionSocket):
 
 
 # SendMessage \t Message \r\n
-# SendMessage \t Success \r\n
+# SendMessage \t Success \t Message \t Sender \t Time \r\n
 # SendMessage \t Failure \r\n
-def sendMessage():
-
+def sendMessage(request, connectionSocket):
     print("sendMessage")
+    database = lite.connect('user.db')
+    user = 1
+    message = "Hello world"
+    timeStamp = time.time()
+    messageInsert = (user, message, timeStamp)
+    database.execute("insert into messages(userID, message, time) values (?,?,?)", messageInsert)
+    userName = database.execute("select firstName, lastName from user where id = ?", (user) )
+    userName.fetchone()
+
+    for i in UserConnectionList:
+        print("Message sent to " + i['firstName'])
+        i['connectionSocket'].send("SendMessage\tSuccess\t" + message + "\t" + userName[0] + userName[1] + "\t" + timeStamp + "\r\n")
+
+
 
 
 # SendPrivateMessage \t Sender \t Receiver \t Message \r\n
