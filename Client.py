@@ -6,6 +6,12 @@ import platform
 class Application(Tk):
     def __init__(self, *args, **kwargs):
         Tk.__init__(self, *args, **kwargs)
+        serverPort = 12009
+        serverName = "localhost"
+        clientSocket = socket(AF_INET, SOCK_STREAM)
+        clientSocket.connect((serverName, serverPort))
+        print("Connection successful, ready to communicate")
+
         self.title("Group Chat")
         self.iconbitmap('groupIcon.ico')
         self.geometry("320x800")
@@ -112,6 +118,7 @@ class RegisterApp(Frame):
 
     def toLogin(self):
         self.controller.show_frame("LoginApp")
+
 
 if __name__ == "__main__":
     app = Application()
