@@ -14,8 +14,10 @@ class Application(Tk):
 
         self.title("Group Chat")
         self.iconbitmap('groupIcon.ico')
-        self.geometry("320x800")
-        self.resizable(0, 0)
+        self.geometry("320x600")
+        self.minsize(320, 400)
+        self.resizable(0, 1)
+
         # the container is where we'll stack a bunch of frames
         # on top of each other, then the one we want visible
         # will be raised above the others
@@ -24,8 +26,21 @@ class Application(Tk):
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
 
+        self.serverPort = 12010
+        self.serverName = "localhost" #I.P Address
+        self.clientSocket = socket(AF_INET, SOCK_STREAM)
+        connected = False
+        try:
+            self.clientSocket.connect((self.serverName, self.serverPort))
+            connected = True
+        except Exception as e:
+            print("Something went wrong:")
+            print(e)
+            connected = False
+            self.clientSocket.close()
+
         self.frames = {}
-        for F in (LoginApp, RegisterApp):
+        for F in (FailedConnection, LoginApp, RegisterApp):
             page_name = F.__name__
             frame = F(master=container, controller=self)
             self.frames[page_name] = frame
@@ -35,12 +50,50 @@ class Application(Tk):
             # will be the one that is visible.
             frame.grid(row=0, column=0, sticky="nsew")
 
-        self.show_frame("LoginApp")
+        if(connected):
+            self.show_frame("LoginApp")
+        else:
+            self.show_frame("FailedConnection")
 
     def show_frame(self, page_name):
         '''Show a frame for the given page name'''
         frame = self.frames[page_name]
         frame.tkraise()
+
+class FailedConnection(Frame):
+    def __init__(self, master, controller):
+        Frame.__init__(self, master)
+        self.controller = controller
+        dialog_frame = Frame(self)
+        dialog_frame.pack(padx=20, expand=1)
+        Label(dialog_frame, text="Failed connecting to server!").grid(row=0, column=0)
+
+        button_frame = Frame(self)
+        button_frame.pack(side=BOTTOM)
+        self.registerButton = Button(button_frame, bg='red', fg='white', text="Quit", width=320, command=self.quitApp)
+        self.registerButton.pack(side=BOTTOM, padx=8, pady=8)
+        self.loginButton = Button(button_frame, bg='blue', fg='white', text="Try Again", width=320, command=self.reconnect)
+        self.loginButton.pack(side=BOTTOM, padx=8)
+
+    def quitApp(self):
+        print("Quitting...")
+        quit()
+
+    def reconnect(self):
+        print("Trying to reconnect...")
+        self.controller.clientSocket = socket(AF_INET, SOCK_STREAM)
+        connected = False
+        try:
+            self.controller.clientSocket.connect((self.controller.serverName, self.controller.serverPort))
+            connected = True
+        except Exception as e:
+            print("Something went wrong:")
+            print(e)
+            connected = False
+            self.controller.clientSocket.close()
+
+        if(connected):
+            self.controller.show_frame("LoginApp")
 
 class LoginApp(Frame):
     def __init__(self, master, controller):
