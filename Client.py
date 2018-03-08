@@ -14,13 +14,19 @@ class User():
 class Application(Tk):
     def __init__(self, *args, **kwargs):
         Tk.__init__(self, *args, **kwargs)
-        self.title("Group Chat")
+        self.Tk = Tk
+        self.title("GROUP CHAT")
         self.iconbitmap('groupIcon.ico')
         self.geometry("320x600")
         self.minsize(320, 400)
         self.resizable(0, 1)
         self.autoCrediential = False
         self.rememberCreditials = False
+        self.menu = Menu(self)
+        self.selectionMenu = Menu(self.menu, tearoff=0)
+        self.selectionMenu.add_command(label='Messages', command=self.toMessages)
+        self.selectionMenu.add_command(label='Profile', command=self.toProfile)
+        self.selectionMenu.add_command(label='Friends', command=self.toFriends)
         # the container is where we'll stack a bunch of frames
         # on top of each other, then the one we want visible
         # will be raised above the others
@@ -46,7 +52,7 @@ class Application(Tk):
             self.clientSocket.close()
 
         self.frames = {}
-        for F in (MainApp, FailedConnection, LoginApp, RegisterApp):
+        for F in (MessagesApp, ProfileApp, FriendsApp, FailedConnection, LoginApp, RegisterApp):
             page_name = F.__name__
             frame = F(master=container, controller=self)
             self.frames[page_name] = frame
@@ -58,8 +64,19 @@ class Application(Tk):
 
         if(connected):
             self.show_frame("LoginApp")
+            #self.show_frame("MessagesApp")
         else:
             self.show_frame("FailedConnection")
+
+
+    def toMessages(self):
+        self.show_frame("MessagesApp")
+
+    def toProfile(self):
+        self.show_frame("ProfileApp")
+
+    def toFriends(self):
+        self.show_frame("FriendsApp")
 
     def show_frame(self, page_name):
         '''Show a frame for the given page name'''
@@ -67,10 +84,37 @@ class Application(Tk):
         frame.tkraise()
 
 
-class MainApp(Frame):
+
+class MessagesApp(Frame):
     def __init__(self, master, controller):
         Frame.__init__(self, master)
         self.controller = controller
+
+        toolbar = Frame(self, bg="blue")
+        self.controller.menu.add_cascade(label="MENU", menu=self.controller.selectionMenu)
+        Label(toolbar, text="MESSAGES", bg="blue", fg="white", justify=CENTER).pack(side=TOP, padx=16, pady=2, expand=1)
+        toolbar.pack(side=TOP, fill=X)
+
+
+class FriendsApp(Frame):
+    def __init__(self, master, controller):
+        Frame.__init__(self, master)
+        self.controller = controller
+
+        toolbar = Frame(self, bg="blue")
+        Label(toolbar, text="FRIENDS", bg="blue", fg="white", justify=CENTER).pack(side=TOP, padx=16, pady=2, expand=1)
+        toolbar.pack(side=TOP, fill=X)
+
+
+
+class ProfileApp(Frame):
+    def __init__(self, master, controller):
+        Frame.__init__(self, master)
+        self.controller = controller
+
+        toolbar = Frame(self, bg="blue")
+        Label(toolbar, text="PROFILE", bg="blue", fg="white", justify=CENTER).pack(side=TOP, padx=16, pady=2, expand=1)
+        toolbar.pack(side=TOP, fill=X)
 
 
 class FailedConnection(Frame):
@@ -187,6 +231,8 @@ class LoginApp(Frame):
             if("Success".upper() in type[1].upper()):
                 #move to the app
                 error = "Login Completed!"
+                self.controller.show_frame("MessagesApp")
+                self.controller.config(menu=self.controller.menu)
             else:
                 error = "Login Failed!"
 
