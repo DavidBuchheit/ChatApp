@@ -23,6 +23,7 @@ UserConnectionList = []
 
 def initiation():
     print("Server started.")
+    print(time())
     while 1:
         print("Server ready to accept connections.")
         connectionSocket, addr = serverSocket.accept()
@@ -111,18 +112,17 @@ def loginCheck(request, connectionSocket):
     print("Checking " + email + " with " + password)
     loginValues = (email, password)
     loginCheck = database.execute("select count(*) from user where email = ? and password = ?", loginValues)
-    if loginCheck.fetchone()[0] < 0:
-        status = "CheckLogin\tFailure\r\n"
+    if loginCheck.fetchone()[0] > 0:
+        status = "CheckLogin \t Success \r\n"
         connectionSocket.send(status.encode())
         database.close()
         print(status)
         return ["Failure"]
     else:
-        print(email)
         infoValues = email
-        information = database.execute("select id, firstName, lastName from user where email = ?", [infoValues])
+        information = database.execute("select id, firstName, lastName from user where email = ?", infoValues)
         information = information.fetchone()
-        status = "CheckLogin \t Success \r\n"
+        status = "CheckLogin \t Failure \r\n"
         connectionSocket.send(status.encode())
         database.close()
         print(status)
