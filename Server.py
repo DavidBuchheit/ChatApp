@@ -34,19 +34,16 @@ def initiation():
 
 def main(connectionSocket):
     print("main")
-    # request = connectionSocket.recv(1024).decode('ascii')
-    RegisterUser("", connectionSocket)
-    SessionData = {
-        'id': '',
-        'FirstName': '',
-        'LastName': '',
-        'LastActive': '',
-    }
-    request = "RegisterUser\tFirstName\tLastName\tAddress\tEmail\tpassword\r\n"
-    type = request.split("\t")
-    if type[0] == "RegisterUser":
-        print("as")
-    UserConnectionList.append(SessionData)
+    while 1:
+        request = connectionSocket.recv(1024).decode('ascii')
+        #request = "RegisterUser\tFirstName\tLastName\tAddress\tEmail\tpassword\r\n"
+
+        type = request.split("\t")
+        if type[0] == "RegisterUser":
+            RegisterUser(request, connectionSocket)
+        elif type[0] == "CheckLogin":
+            loginCheck(request, connectionSocket)
+
 
 
 
@@ -71,11 +68,12 @@ def sendPrivateMessage():
 def RegisterUser(request, connectionSocket):
     database = lite.connect('user.db')
     print("Register user")
-    firstName = ""
-    lastName = ""
-    address = ""
-    email = ""
-    password = ""
+    type = request.split("\t")
+    firstName = type[1]
+    lastName = type[2]
+    address = type[3]
+    email = type[4]
+    password = type[5]
     # Query for checking if user has an account already
     # Checks if all the current data exists and checks if email already is in database
     values = (firstName, lastName, address, email)
@@ -83,9 +81,9 @@ def RegisterUser(request, connectionSocket):
     test = check.execute("select count(*) from user where ( firstName = ? and lastName = ? and address = ?) or email = ?", values)
     if test.fetchone()[0] > 0: #if user already has info in DB. Send failure response
         print("Registration failure")
+        database.close()
         response = "RegisterUser\tFailure\r\n"
         connectionSocket.send(response.encode())
-        database.close()
         return ["Failure"]
     else:
         print("Registration successful")
@@ -95,28 +93,39 @@ def RegisterUser(request, connectionSocket):
         lastRowID = cur.lastrowid
         database.commit()
         database.close()
+        response = "RegisterUser\tSuccess\r\n"
+        connectionSocket.send(response.encode())
         return ["Success", lastRowID, vals[0], vals[1], vals[3]]
 
 
+#
+# -----------We should use the username and not the email for this-----------
+#
 # CheckLogin \t email \t Password \r\n
 # CheckLogin \t Success \r\n
 # CheckLogin \t Failure \r\n
 def loginCheck(request, connectionSocket):
-    database = lite.connect('Users.db')
-    email = ""
-    password = ""
+    database = lite.connect('user.db')
+    type = request.split("\t")
+    email = type[1]
+    password = type[2]
+    print("Checking " + email + " with " + password)
     loginValues = (email, password)
     loginCheck = database.execute("select count(*) from user where email = ? and password = ?", loginValues)
     if loginCheck.fetchone()[0] > 0:
-        connectionSocket.send("CheckLogin \t Success \r\n".encode())
+        status = "CheckLogin \t Success \r\n"
+        connectionSocket.send(status.encode())
         database.close()
+        print(status)
         return ["Failure"]
     else:
         infoValues = email
         information = database.execute("select id, firstName, lastName from user where email = ?", infoValues)
         information = information.fetchone()
-        connectionSocket.send("CheckLogin \t Failure \r\n".encode())
+        status = "CheckLogin \t Failure \r\n"
+        connectionSocket.send(status.encode())
         database.close()
+        print(status)
         return ["Success", information[0], information[1], information[2]]
 
 # FriendsList \r\n
