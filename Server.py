@@ -160,6 +160,7 @@ def getOfflineMessages():
 # Logout \t Failure \r\n
 def logout():
     print("Logout")
+
     #update DB where their last online time is now and remove them from current users array
 
 if __name__ == '__main__':
