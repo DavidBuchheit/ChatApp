@@ -35,7 +35,6 @@ def main(connectionSocket):
     print("main")
     while 1:
         request = connectionSocket.recv(1024).decode('ascii')
-        #request = "RegisterUser\tFirstName\tLastName\tAddress\tEmail\tpassword\r\n"
 
         type = request.split("\t")
         if type[0] == "RegisterUser":
@@ -111,22 +110,28 @@ def loginCheck(request, connectionSocket):
     print("Checking " + email + " with " + password)
     loginValues = (email, password)
     loginCheck = database.execute("select count(*) from user where email = ? and password = ?", loginValues)
-    if loginCheck.fetchone()[0] < 0:
-        status = "CheckLogin\tFailure\r\n"
-        connectionSocket.send(status.encode())
-        database.close()
-        print(status)
-        return ["Failure"]
-    else:
-        print(email)
-        infoValues = email
-        information = database.execute("select id, firstName, lastName from user where email = ?", [infoValues])
-        information = information.fetchone()
-        status = "CheckLogin \t Success \r\n"
-        connectionSocket.send(status.encode())
-        database.close()
-        print(status)
-        return ["Success", information[0], information[1], information[2]]
+    print(loginCheck.fetchall())
+
+    status = "CheckLogin\tFailure\r\n"
+    connectionSocket.send(status.encode())
+
+    return 0
+
+    # if loginCheck.fetchone()[0] < 0:
+    #     status = "CheckLogin\tFailure\r\n"
+    #     connectionSocket.send(status.encode())
+    #     database.close()
+    #     return ["Failure"]
+    # else:
+    #     infoValues = email
+    #     information = database.execute("select id, firstName, lastName from user where email = ?", [infoValues])
+    #     info = information.fetchall()
+    #     status = "CheckLogin \t Success \r\n"
+    #     connectionSocket.send(status.encode())
+    #     database.close()
+    #     print(info)
+    #     return "yes"
+    #     #return ["Success", information[0], information[1], information[2]]
 
 # FriendsList \r\n
 # FriendsList \t Success \t Array Of Friends \r\n
