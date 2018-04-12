@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e578a91e-d12e-4244-a653-4a39fd293099" name="Default" comment="fixes, hopefully">
+    <list default="true" id="e578a91e-d12e-4244-a653-4a39fd293099" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/Utilities.py" afterPath="$PROJECT_DIR$/Utilities.py" />
     </list>
     <ignored path="C:\Users\buchheitdr12\PycharmProjects\ChatApp\.idea\shelf/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -272,7 +271,14 @@
       <option name="project" value="LOCAL" />
       <updated>1521755113313</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="fixes, hopefully">
+      <created>1523569963567</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1523569963567</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="ToolWindowManager">
