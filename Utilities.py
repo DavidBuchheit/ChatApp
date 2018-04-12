@@ -17,7 +17,18 @@ class Room:
 
     def lostUser(self, user):
         #if room owner, delete room
+        if self.owner == user :
+            self.players = {}
+            OverView.deleteRoom(self.name)
+        else:
+            self.players.pop(user)
         print("lostUser")
+
+    def joinUser(self, user):
+        self.players.append(user)
+
+    def
+
 
 class User:
     def __init__(self, socket, name="", email=""):
@@ -30,6 +41,7 @@ class User:
     def logout(self):
         print("logout")
 
+
 class OverView:
     def __init__(self):
         self.rooms = {} # RoomName : Room object
@@ -37,3 +49,10 @@ class OverView:
 
     def listRooms(self):
         print("listrooms")
+
+    def deleteRoom(self, roomName):
+        for room in self.rooms:
+            if room.name == roomName:
+                self.rooms.pop(roomName)
+                break
+
