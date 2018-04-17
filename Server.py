@@ -5,16 +5,14 @@ from socket import *
 from _thread import *
 from datetime import *
 from time import *
-from Utilities import *
 
 
-serverPort = 12005
+serverPort = 12010
 serverSocket = socket(AF_INET, SOCK_STREAM)
 serverSocket.bind(('', serverPort))
 serverSocket.listen(10)
 
 UserConnectionList = []
-OverView = OverView()
 ############################
 # Responses: Type \t Failure OR Success \r\n
 #        Ex: SendMessage \t Success \r\n
@@ -109,27 +107,31 @@ def loginCheck(request, connectionSocket):
     type = request.split("\t")
     email = type[1]
     password = type[2]
-    password = password.strip('\r\n')
     print("Checking " + email + " with " + password)
     loginValues = (email, password)
     loginCheck = database.execute("select count(*) from user where email = ? and password = ?", loginValues)
-    count = loginCheck.fetchall()[0][0]
-    print(count)
-    if count < 1:
-        status = "CheckLogin\tFailure\r\n"
-        connectionSocket.send(status.encode())
-        database.close()
-        print("Login failure")
-        return ["Failure"]
-    else:
-        infoValues = email
-        information = database.execute("select id, firstName, lastName from user where email = ?", [infoValues])
-        info = information.fetchall()
-        status = "CheckLogin\tSuccess\r\n"
-        connectionSocket.send(status.encode())
-        database.close()
-        print("Login Successful")
-        return ["Success"]
+    print(loginCheck.fetchall())
+
+    status = "CheckLogin\tFailure\r\n"
+    connectionSocket.send(status.encode())
+
+    return 0
+
+    # if loginCheck.fetchone()[0] < 0:
+    #     status = "CheckLogin\tFailure\r\n"
+    #     connectionSocket.send(status.encode())
+    #     database.close()
+    #     return ["Failure"]
+    # else:
+    #     infoValues = email
+    #     information = database.execute("select id, firstName, lastName from user where email = ?", [infoValues])
+    #     info = information.fetchall()
+    #     status = "CheckLogin \t Success \r\n"
+    #     connectionSocket.send(status.encode())
+    #     database.close()
+    #     print(info)
+    #     return "yes"
+    #     #return ["Success", information[0], information[1], information[2]]
 
 # FriendsList \r\n
 # FriendsList \t Success \t Array Of Friends \r\n
