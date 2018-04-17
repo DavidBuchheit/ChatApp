@@ -27,8 +27,6 @@ class Room:
     def joinUser(self, user):
         self.players.append(user)
 
-    def
-
 
 class User:
     def __init__(self, socket, name="", email=""):
