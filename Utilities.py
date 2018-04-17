@@ -27,17 +27,22 @@ class Room:
     def joinUser(self, user):
         self.players.append(user)
 
+
 class User:
     def __init__(self, socket, name="", email=""):
         socket.setblocking(0)
         self.name = name
-        self.email = email
         self.socket = socket
+        self.email = email
         self.lastActive = 0
         self.status = 0 # 0 = Active, 1 = AFK, 2 = Offline
 
     def logout(self):
+        self.status = 2
         print("logout")
+
+
+
 
 
 class OverView:
@@ -49,19 +54,19 @@ class OverView:
         print("listrooms")
 
     def deleteRoom(self, roomName):
-        for room in self.rooms:
-            if room.name == roomName:
-                self.rooms.pop(roomName)
-                break
+        self.rooms.pop(roomName)
+
+    def createRoom(self, Owner, Roomname):
+        self.rooms[Roomname] = Room(Owner, Roomname)
+        self.rooms[Roomname].joinUser(Owner)
 
     def grabRooms(self, email=""):
         roomsWithUser = {}
         for room in self.rooms:
-            #if the email is in the room's players
+            # if the email is in the room's players
             for player in room.players:
                 if player.email == email:
                     roomsWithUser.pop(room)
                     break
 
         return roomsWithUser
-
