@@ -104,3 +104,4 @@ ENV/
 .idea
 /.idea/
 .idea/
+user.db

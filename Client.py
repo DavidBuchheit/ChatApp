@@ -25,7 +25,6 @@ class Application(Tk):
         self.menu = Menu(self)
         self.selectionMenu = Menu(self.menu, tearoff=0)
         self.selectionMenu.add_command(label='Messages', command=self.toMessages)
-        self.selectionMenu.add_command(label='Profile', command=self.toProfile)
         self.selectionMenu.add_command(label='Friends', command=self.toFriends)
         # the container is where we'll stack a bunch of frames
         # on top of each other, then the one we want visible
@@ -35,7 +34,7 @@ class Application(Tk):
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
 
-        self.serverPort = 12010
+        self.serverPort = 12005
         self.serverName = "localhost" #I.P Address
         self.clientSocket = socket(AF_INET, SOCK_STREAM)
 
@@ -52,7 +51,7 @@ class Application(Tk):
             self.clientSocket.close()
 
         self.frames = {}
-        for F in (MessagesApp, ProfileApp, FriendsApp, FailedConnection, LoginApp, RegisterApp):
+        for F in (MessagesApp, FriendsApp, FailedConnection, LoginApp, RegisterApp):
             page_name = F.__name__
             frame = F(master=container, controller=self)
             self.frames[page_name] = frame
@@ -71,9 +70,6 @@ class Application(Tk):
 
     def toMessages(self):
         self.show_frame("MessagesApp")
-
-    def toProfile(self):
-        self.show_frame("ProfileApp")
 
     def toFriends(self):
         self.show_frame("FriendsApp")
@@ -104,18 +100,6 @@ class FriendsApp(Frame):
         toolbar = Frame(self, bg="blue")
         Label(toolbar, text="FRIENDS", bg="blue", fg="white", justify=CENTER).pack(side=TOP, padx=16, pady=2, expand=1)
         toolbar.pack(side=TOP, fill=X)
-
-
-
-class ProfileApp(Frame):
-    def __init__(self, master, controller):
-        Frame.__init__(self, master)
-        self.controller = controller
-
-        toolbar = Frame(self, bg="blue")
-        Label(toolbar, text="PROFILE", bg="blue", fg="white", justify=CENTER).pack(side=TOP, padx=16, pady=2, expand=1)
-        toolbar.pack(side=TOP, fill=X)
-
 
 class FailedConnection(Frame):
     def __init__(self, master, controller):
