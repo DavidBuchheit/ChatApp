@@ -1,4 +1,4 @@
-import socket
+from socket import *
 import time
 
 AFKTime = 300 #300 seconds (5 mins)
@@ -27,7 +27,6 @@ class Room:
     def joinUser(self, user):
         self.players.append(user)
 
-    def
 
 
 class User:
@@ -55,4 +54,11 @@ class OverView:
             if room.name == roomName:
                 self.rooms.pop(roomName)
                 break
+
+    def createRoom(self, owner, roomname):
+        room = Room(owner, roomname)
+        self.rooms[roomname] = room
+
+    #def addUser(self, username, roomname):
+
 
