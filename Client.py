@@ -1,15 +1,10 @@
 import sys
 from tkinter import *
 from socket import *
+from Utilities import User, Room
 import platform
 import atexit
 import unicodedata
-
-class User():
-    def __init__(self, email, name):
-        self.email = email
-        self.name = name
-
 
 class Application(Tk):
     def __init__(self, *args, **kwargs):
@@ -37,8 +32,10 @@ class Application(Tk):
         self.serverPort = 12005
         self.serverName = "localhost" #I.P Address
         self.clientSocket = socket(AF_INET, SOCK_STREAM)
-
-        self.currentUser = User('', '')
+        # get friends from User by sending a request to the server and recieving the information
+        self.friendsArray = ['David Buchheit', 'Brandon Smith', 'Brandon Patz', 'Micheal Fahey',
+                        'Jordan Pryce', 'Devonte Mayo', 'Amanda McDermott', 'Eric Pombert']
+        self.friendsFrame = Listbox(self)
 
         connected = False
         try:
@@ -51,7 +48,7 @@ class Application(Tk):
             self.clientSocket.close()
 
         self.frames = {}
-        for F in (MessagesApp, FriendsApp, FailedConnection, LoginApp, RegisterApp):
+        for F in (MessagesApp, FriendsApp, CreateGroupApp, FailedConnection, LoginApp, RegisterApp):
             page_name = F.__name__
             frame = F(master=container, controller=self)
             self.frames[page_name] = frame
@@ -63,7 +60,6 @@ class Application(Tk):
 
         if(connected):
             self.show_frame("LoginApp")
-            #self.show_frame("MessagesApp")
         else:
             self.show_frame("FailedConnection")
 
@@ -80,7 +76,6 @@ class Application(Tk):
         frame.tkraise()
 
 
-
 class MessagesApp(Frame):
     def __init__(self, master, controller):
         Frame.__init__(self, master)
@@ -90,6 +85,112 @@ class MessagesApp(Frame):
         self.controller.menu.add_cascade(label="MENU", menu=self.controller.selectionMenu)
         Label(toolbar, text="MESSAGES", bg="blue", fg="white", justify=CENTER).pack(side=TOP, padx=16, pady=2, expand=1)
         toolbar.pack(side=TOP, fill=X)
+        roomsFrame = Frame(self)
+        roomsFrame.pack(side=TOP)
+
+        #get rooms from User by sending a request to the server and recieving the information
+        roomsArray = {'David Buchheit'}
+
+        for room in roomsArray:
+            #button for each friend
+            rButton = Button(roomsFrame, bg='gray', fg='black', text=room, width=320, justify=RIGHT, command=lambda : self.create_room_window(room))
+            rButton.pack(side=TOP, pady=2, padx=2)
+
+        addGroupFrame = Frame(self)
+        addGroupFrame.pack(side=BOTTOM)
+        addButton = Button(addGroupFrame, bg='blue', fg='white', text='Create New Group', width=320, command=self.createGroup)
+        addButton.pack(side=BOTTOM, padx=16, pady=8)
+
+    def createGroup(self):
+        self.controller.show_frame("CreateGroupApp")
+
+    def create_room_window(self, room):
+        large_font = ('Verdana', 30)
+        window = Toplevel(self, takefocus=None)
+        window.lift(aboveThis=None)
+        window.minsize(320, 320)
+        window.resizable(0, 1)
+        window.iconbitmap('groupIcon.ico')
+        toolbar = Frame(window, bg="blue")
+        Label(toolbar, text=room, bg="blue", fg="white", justify=CENTER).pack(side=TOP, padx=16, pady=2, expand=1)
+        toolbar.pack(side=TOP, fill=X)
+        messageFrame = Frame(window, bg='gray')
+        messageFrame.pack(side=BOTTOM, fill=X)
+        messageSend = Button(messageFrame, text='SEND', bg='blue', fg='white')
+        messageSend.pack(side=RIGHT)
+        messageInput = Entry(messageFrame)
+        messageInput.pack(padx=2, pady=2, fill=X)
+        messageInput.focus_set()
+
+
+class CreateGroupApp(Frame):
+    def __init__(self, master, controller):
+        Frame.__init__(self, master)
+        self.controller = controller
+
+        #refresh friendlist
+
+        toolbar = Frame(self, bg="blue")
+        Label(toolbar, text="CREATE NEW GROUP", bg="blue", fg="white", justify=CENTER).pack(side=TOP, padx=16, pady=2, expand=1)
+        toolbar.pack(side=TOP, fill=X)
+
+        nameFrame = Frame(self)
+        nameFrame.pack(side=TOP)
+        Label(nameFrame, text="Group Name:", ).pack(anchor="w", fill=X, padx=8, pady=2)
+        self.gNameInput = Entry(nameFrame, bg='white', width=24)
+        self.gNameInput.insert(0, "Group X")
+        self.gNameInput.focus_set()
+        self.gNameInput.pack(side=TOP, fill=X, padx=8, pady=2)
+
+        friendsList = LabelFrame(self, text='Choose Friends To Be In The Group:')
+        friendsList.pack(side=TOP, padx=8, pady=8)
+        self.yScroll = Scrollbar(friendsList, orient=VERTICAL)
+        self.yScroll.pack(side=RIGHT, fill=Y)
+        self.controller.friendsFrame = Listbox(friendsList, selectmode=MULTIPLE, width=320, yscrollcommand=self.yScroll.set)
+        self.controller.friendsFrame.bind('<<ListboxSelect>>', self.CurSelect)
+        self.controller.friendsFrame.pack()
+        self.yScroll['command'] = self.controller.friendsFrame.yview
+
+        for friend in self.controller.friendsArray:
+            # button for each friend
+            self.controller.friendsFrame.insert(END, friend)
+
+        button_frame = Frame(self)
+        button_frame.pack(side=BOTTOM)
+        self.backButton = Button(button_frame, bg='red', fg='white', text="Back", width=320,
+                                  command=self.toMessages)
+        self.backButton.pack(side=BOTTOM, padx=8, pady=8)
+        self.groupButton = Button(button_frame, bg='blue', fg='white', text="Create Group", width=320,
+                                  command=self.createGroup)
+        self.groupButton.pack(side=BOTTOM, padx=8)
+
+        groupFrame = Frame(self)
+        groupFrame.pack(side=TOP)
+        groupLabel = Label(groupFrame, text="Create Group With:", width=320)
+        groupLabel.pack(side=TOP)
+
+        self.groupLabel = Text(groupFrame)
+        self.groupLabel.insert(INSERT, "Please select group members", "a")
+        self.groupLabel.pack()
+
+        self.groupNames = ""
+        self.selectedMemebers = {}
+
+    def CurSelect(self, evt):
+        self.groupNames = ""
+        self.selectedMemebers = self.controller.friendsFrame.curselection()
+        for index in self.selectedMemebers:
+            self.groupNames += self.controller.friendsFrame.get(index)
+            self.groupNames += "\n"
+        self.groupNames = self.groupNames[:-1]
+        self.groupLabel.delete('1.0', END)
+        self.groupLabel.insert(INSERT, self.groupNames, "a")
+
+    def createGroup(self):
+        print("Create Group: ")
+
+    def toMessages(self):
+        self.controller.show_frame("MessagesApp")
 
 
 class FriendsApp(Frame):
@@ -97,9 +198,57 @@ class FriendsApp(Frame):
         Frame.__init__(self, master)
         self.controller = controller
 
+        #refresh friendlist
+
+        self.selectedFriend = -1
+
         toolbar = Frame(self, bg="blue")
         Label(toolbar, text="FRIENDS", bg="blue", fg="white", justify=CENTER).pack(side=TOP, padx=16, pady=2, expand=1)
         toolbar.pack(side=TOP, fill=X)
+
+        friendsList = Frame(self)
+        friendsList.pack(side=TOP)
+        self.yScroll = Scrollbar(friendsList, orient=VERTICAL)
+        self.yScroll.pack(side=RIGHT, fill=Y)
+        self.friendsListFrame = Listbox(friendsList, selectmode=SINGLE, width=320, yscrollcommand=self.yScroll.set)
+        self.friendsListFrame.bind('<<ListboxSelect>>', self.CurSelet)
+        self.friendsListFrame.pack(side=TOP)
+        self.yScroll['command'] = self.friendsListFrame.yview
+
+        self.friendsListFrame.delete(0, END)
+        for friend in self.controller.friendsArray:
+            #button for each friend
+            self.friendsListFrame.insert(END, friend)
+
+        removeButton = Button(self, bg='red', fg='white', text='Remove Friend', width=320, command=self.removeFriend)
+        removeButton.pack(side=TOP)
+
+        addFriendFrame = LabelFrame(self, text="Input an email to add friends:", width=320)
+        addFriendFrame.pack(side=BOTTOM)
+        addButton = Button(addFriendFrame, bg='blue', fg='white', text='Add Friend', width=320)
+        addButton.pack(side=BOTTOM, padx=16, pady=4)
+        self.fInput = Entry(addFriendFrame, bg='white', width=320)
+        self.fInput.pack(side=BOTTOM, padx=16, pady=4)
+
+    def CurSelet(self, evt):
+        self.selectedFriend = self.friendsListFrame.curselection()[0]
+
+    def addFriend(self):
+        print("Add Friend:")
+
+    def removeFriend(self):
+        if self.selectedFriend >= 0:
+            del self.controller.friendsArray[self.selectedFriend]
+            self.friendsListFrame.delete(0, END)
+            self.controller.friendsFrame.delete(0, END)
+            for friend in self.controller.friendsArray:
+                # button for each friend
+                self.friendsListFrame.insert(END, friend)
+                self.controller.friendsFrame.insert(END, friend)
+            self.selectedFriend = -1
+
+
+
 
 class FailedConnection(Frame):
     def __init__(self, master, controller):
