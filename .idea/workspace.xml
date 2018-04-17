@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="03d3ccb2-8baf-4a4f-b22a-58002b1e53f6" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/Server.py" afterPath="$PROJECT_DIR$/Server.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -48,14 +49,14 @@
       <file leaf-file-name="Server.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Server.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="381">
-              <caret line="125" column="57" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="170" selection-end-column="0" />
+            <state relative-caret-position="92">
+              <caret line="108" column="30" lean-forward="true" selection-start-line="108" selection-start-column="30" selection-end-line="108" selection-end-column="30" />
               <folding>
                 <element signature="e#13#35#0" expanded="true" />
-                <marker date="1523932993453" expanded="true" signature="2133:2227" ph="select count... user" />
-                <marker date="1523932993453" expanded="true" signature="2686:2772" ph="insert into user... " />
-                <marker date="1523932993453" expanded="true" signature="3526:3584" ph="select count... user" />
-                <marker date="1523932993453" expanded="true" signature="3914:3970" ph="select id, f... user" />
+                <marker date="1523933080792" expanded="true" signature="2133:2227" ph="select count... user" />
+                <marker date="1523933080792" expanded="true" signature="2686:2772" ph="insert into user... " />
+                <marker date="1523933080792" expanded="true" signature="3526:3584" ph="select count... user" />
+                <marker date="1523933080792" expanded="true" signature="3909:3965" ph="select id, f... user" />
               </folding>
             </state>
           </provider>
@@ -112,6 +113,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="PUSH_TAGS">
+      <GitPushTagMode />
+    </option>
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -329,7 +333,14 @@
       <option name="project" value="LOCAL" />
       <updated>1523932971032</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="fixes">
+      <created>1523933019258</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1523933019258</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -383,10 +394,10 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#13#35#0" expanded="true" />
-            <marker date="1523932993453" expanded="true" signature="2133:2227" ph="select count... user" />
-            <marker date="1523932993453" expanded="true" signature="2686:2772" ph="insert into user... " />
-            <marker date="1523932993453" expanded="true" signature="3526:3584" ph="select count... user" />
-            <marker date="1523932993453" expanded="true" signature="3914:3970" ph="select id, f... user" />
+            <marker date="1523933080792" expanded="true" signature="2133:2227" ph="select count... user" />
+            <marker date="1523933080792" expanded="true" signature="2686:2772" ph="insert into user... " />
+            <marker date="1523933080792" expanded="true" signature="3526:3584" ph="select count... user" />
+            <marker date="1523933080792" expanded="true" signature="3909:3965" ph="select id, f... user" />
           </folding>
         </state>
       </provider>
@@ -397,10 +408,10 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#13#35#0" expanded="true" />
-            <marker date="1523932993453" expanded="true" signature="2133:2227" ph="select count... user" />
-            <marker date="1523932993453" expanded="true" signature="2686:2772" ph="insert into user... " />
-            <marker date="1523932993453" expanded="true" signature="3526:3584" ph="select count... user" />
-            <marker date="1523932993453" expanded="true" signature="3914:3970" ph="select id, f... user" />
+            <marker date="1523933080792" expanded="true" signature="2133:2227" ph="select count... user" />
+            <marker date="1523933080792" expanded="true" signature="2686:2772" ph="insert into user... " />
+            <marker date="1523933080792" expanded="true" signature="3526:3584" ph="select count... user" />
+            <marker date="1523933080792" expanded="true" signature="3909:3965" ph="select id, f... user" />
           </folding>
         </state>
       </provider>
@@ -411,10 +422,10 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#13#35#0" expanded="true" />
-            <marker date="1523932993453" expanded="true" signature="2133:2227" ph="select count... user" />
-            <marker date="1523932993453" expanded="true" signature="2686:2772" ph="insert into user... " />
-            <marker date="1523932993453" expanded="true" signature="3526:3584" ph="select count... user" />
-            <marker date="1523932993453" expanded="true" signature="3914:3970" ph="select id, f... user" />
+            <marker date="1523933080792" expanded="true" signature="2133:2227" ph="select count... user" />
+            <marker date="1523933080792" expanded="true" signature="2686:2772" ph="insert into user... " />
+            <marker date="1523933080792" expanded="true" signature="3526:3584" ph="select count... user" />
+            <marker date="1523933080792" expanded="true" signature="3909:3965" ph="select id, f... user" />
           </folding>
         </state>
       </provider>
@@ -470,14 +481,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Server.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="381">
-          <caret line="125" column="57" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="170" selection-end-column="0" />
+        <state relative-caret-position="92">
+          <caret line="108" column="30" lean-forward="true" selection-start-line="108" selection-start-column="30" selection-end-line="108" selection-end-column="30" />
           <folding>
             <element signature="e#13#35#0" expanded="true" />
-            <marker date="1523932993453" expanded="true" signature="2133:2227" ph="select count... user" />
-            <marker date="1523932993453" expanded="true" signature="2686:2772" ph="insert into user... " />
-            <marker date="1523932993453" expanded="true" signature="3526:3584" ph="select count... user" />
-            <marker date="1523932993453" expanded="true" signature="3914:3970" ph="select id, f... user" />
+            <marker date="1523933080792" expanded="true" signature="2133:2227" ph="select count... user" />
+            <marker date="1523933080792" expanded="true" signature="2686:2772" ph="insert into user... " />
+            <marker date="1523933080792" expanded="true" signature="3526:3584" ph="select count... user" />
+            <marker date="1523933080792" expanded="true" signature="3909:3965" ph="select id, f... user" />
           </folding>
         </state>
       </provider>

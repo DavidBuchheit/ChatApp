@@ -115,7 +115,7 @@ def loginCheck(request, connectionSocket):
     loginCheck = database.execute("select count(*) from user where email = ? and password = ?", loginValues)
     count = loginCheck.fetchall()[0][0]
 
-    if loginCheck < 1:
+    if count < 1:
         status = "CheckLogin\tFailure\r\n"
         connectionSocket.send(status.encode())
         database.close()
