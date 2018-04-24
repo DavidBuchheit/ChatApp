@@ -25,6 +25,7 @@ OverView = OverView()
 def initiation():
     print("Server started.")
     createEverything()
+
     while 1:
         print("Server ready to accept connections.")
         connectionSocket, addr = serverSocket.accept()
@@ -42,7 +43,7 @@ def createEverything():
     users = users.fetchall()
 
     for i in range(len(users)):
-        OverView.users.append(User("", users[i][0],  users[i][1] + users[i][2],  users[i][3], 1))
+        OverView.users.append(User("", users[i][0],  users[i][1] + " " + users[i][2],  users[i][3], 1))
 
     rooms = cursor.execute("select * from rooms where deleted = '0' ")
     rooms = rooms.fetchall()
@@ -56,24 +57,45 @@ def createEverything():
             for k in range(len(OverView.users)):
                 if(OverView.users[k].id == people[j][0]):
                     room.joinUser(OverView.users[k])
+        OverView.rooms.append(room)
 
+    print("Rooms & Users populated")
     return 0
 
 # JoinRoom \t UserID \t RoomID \r\n
 # JoinRoom \t Success \r\n
+# JoinedRoom \t User \r\n     Sends user info to clients when seomeone joins room
 def joinRoom(connectionSocket, request):
     request = request.strip("\r\n")
     request = request.split("\t")
-    UserID =  request[1]
-    roomID = request[2]
+    UserID =  int(request[1])
+    roomID = int(request[2])
 
     database = lite.connect('user.db')
     cursor = database.cursor()
     cursor.execute("insert into roomMembers values(roomID = ?, userID = ?)", [roomID, UserID])
 
-    connectionSocket.send("JoinRoom\tSuccess\r\n")
+    connectionSocket.send("JoinRoom\tSuccess\r\n".encode() )
+    # connectionSocket.send( OverView.findUserByID(userID).encode() )
 
     return 1
+
+# RoomsInfo \r\n
+# YourRooms { RoomName, RoomID } \r\n
+def getMyRooms(connectionSocket, request):
+    user = OverView.findUserBySocket(connectionSocket)
+    print("Get Rooms")
+    rooms = OverView.grabRoomsWithUser(user.id)
+    send = "YourRooms\t" + rooms.__str__()
+    connectionSocket.send( send.encode() )
+
+    return 1
+
+# LeaveRoom
+# LeaveRoom \t Success \r\n
+# LeftRoom \t User \r\n Sends user info to clients when someone leaves room
+def leaveRoom(connectionSocket, request):
+    print("leaveRoom")
 
 def main(connectionSocket):
     print("main")
@@ -105,13 +127,15 @@ def main(connectionSocket):
 # SendMessage \t Message \t RoomID \r\n
 # SendMessage \t Success \r\n
 # SendMessage \t Failure \r\n
+
+# IncomingMessage \t Message \t RoomID \r\n
 def sendMessage(request, connectionSocket):
     request = request.strip("\r\n")
     request = request.split("\t")
     message = request[1]
-    roomID = request[2]
+    roomID = int(request[2])
 
-
+    OverView.sendMessage(roomID, message, OverView.findUserBySocket(connectionSocket))
 
     print("sendMessage")
 
@@ -122,7 +146,7 @@ def sendMessage(request, connectionSocket):
 def sendPrivateMessage(request, connectionSocket):
     print("sendPrivateMessage")
 
-# CreateRoom \t Owner \t Name \t \r\n
+# CreateRoom \t RoomName \r\n
 # CreateRoom \t Success \r\n
 # CreateRoom \t Failure \r\n
 def createRoom(request, connectionSocket):

@@ -12,10 +12,15 @@ class Room:
         self.players = []   # Array of all users
 
     def sendMessage(self, sender, message):
-        msg = time.time() + " : " + sender + " : " + message + "\n" # SQL Insert on server end
+        # IncomingMessage \t Message \t RoomID \t Sender \t Time \r\n
+        message = "IncomingMessage\t"
+        message += message + "\t"
+        message += self.id + "\t"
+        message += sender + "\t"
+        message += time.time() + "\r\n"
         for player in self.players:
             if player.status != 1 and player.socket != "":
-                player.socket.sendall(msg.encode())
+                player.socket.send(message.encode())
 
     def lostUser(self, user):
         #if room owner, delete room
@@ -25,6 +30,12 @@ class Room:
         else:
             self.players.pop(user)
         print("lostUser")
+
+    def containsUser(self, userID):
+        for player in self.players:
+            if player.id == userID:
+                return True
+        return False
 
     def joinUser(self, user):
         self.players.append(user)
@@ -63,6 +74,16 @@ class OverView:
         self.rooms[Roomname] = Room(Owner, Roomname, id)
         self.rooms[Roomname].joinUser(Owner)
 
+    def grabRoomsWithUser(self, userID):
+        userRooms = []
+
+        for room in self.rooms:
+            if room.containsUser(userID):
+                #userRooms.push(room)
+                userRooms.append({"Name":room.name, "ID": room.id})
+
+        return userRooms
+
     def grabRooms(self, email=""):
         roomsWithUser = {}
         for room in self.rooms:
@@ -88,14 +109,25 @@ class OverView:
                 user.connectionSocket = ""
                 break
 
-
-
     def addUser(self, roomID, user):
         for room in self.rooms:
             if(room.id == roomID):
                 room.joinUser(user)
                 break
 
+    def findUserByID(self, userID):
+        for user in self.users:
+            if( int(user.id) == userID):
+                return user
 
+    def findUserBySocket(self, socket):
+        for user in self.users:
+            if( user.socket == socket):
+                return user
 
+    def sendMessage(self, roomID, message, socket):
+        for room in self.rooms:
+            if(room.id == roomID):
+                room.sendMessage( findUsrBySocket(socket), message)
+                break
 

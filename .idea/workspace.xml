@@ -3,6 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="03d3ccb2-8baf-4a4f-b22a-58002b1e53f6" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/Client.py" afterPath="$PROJECT_DIR$/Client.py" />
+      <change beforePath="$PROJECT_DIR$/Server.py" afterPath="$PROJECT_DIR$/Server.py" />
+      <change beforePath="$PROJECT_DIR$/Utilities.py" afterPath="$PROJECT_DIR$/Utilities.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -12,8 +15,8 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/ChatApp$Client.coverage" NAME="Client Coverage Results" MODIFIED="1524539983585" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/ChatApp$Server.coverage" NAME="Server Coverage Results" MODIFIED="1524540174111" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ChatApp$Server.coverage" NAME="Server Coverage Results" MODIFIED="1524584405101" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ChatApp$Client.coverage" NAME="Client Coverage Results" MODIFIED="1524583537567" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="DatabaseView">
     <option name="SHOW_INTERMEDIATE" value="true" />
@@ -32,6 +35,11 @@
       <path>
         <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
         <item name="user.db" type="feb32156:DbDataSourceImpl" />
+        <item name="collations" type="d4e8921:DatabaseStructure$FamilyGroup" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="user.db" type="feb32156:DbDataSourceImpl" />
         <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
       </path>
       <path>
@@ -39,27 +47,6 @@
         <item name="user.db" type="feb32156:DbDataSourceImpl" />
         <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
         <item name="main: schema" type="90513b60:SqliteImplModel$Schema" />
-      </path>
-      <path>
-        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
-        <item name="user.db" type="feb32156:DbDataSourceImpl" />
-        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
-        <item name="main: schema" type="90513b60:SqliteImplModel$Schema" />
-        <item name="roomMembers: table" type="ffe0bd85:SqliteImplModel$Table" />
-      </path>
-      <path>
-        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
-        <item name="user.db" type="feb32156:DbDataSourceImpl" />
-        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
-        <item name="main: schema" type="90513b60:SqliteImplModel$Schema" />
-        <item name="rooms: table" type="ffe0bd85:SqliteImplModel$Table" />
-      </path>
-      <path>
-        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
-        <item name="user.db" type="feb32156:DbDataSourceImpl" />
-        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
-        <item name="main: schema" type="90513b60:SqliteImplModel$Schema" />
-        <item name="user: table" type="ffe0bd85:SqliteImplModel$Table" />
       </path>
     </expand>
     <select />
@@ -69,28 +56,25 @@
       <file leaf-file-name="Server.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Server.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="612">
-              <caret line="48" column="43" lean-forward="false" selection-start-line="48" selection-start-column="43" selection-end-line="48" selection-end-column="43" />
+            <state relative-caret-position="260">
+              <caret line="89" column="42" lean-forward="true" selection-start-line="89" selection-start-column="42" selection-end-line="89" selection-end-column="42" />
               <folding>
                 <element signature="e#13#35#0" expanded="true" />
-                <marker date="1524546120253" expanded="true" signature="1070:1117" ph="select id, f... user" />
-                <marker date="1524546120253" expanded="true" signature="1309:1328" ph="select * fro... rooms" />
-                <marker date="1524546120253" expanded="true" signature="1309:1348" ph="select * fro... rooms" />
-                <marker date="1524546120253" expanded="true" signature="1491:1550" ph="select u.* f... " />
-                <marker date="1524546120253" expanded="true" signature="1491:1551" ph="select u.* f... roomMembers" />
-                <marker date="1524546120253" expanded="true" signature="1491:1623" ph="select u.* f... roomMembers" />
-                <marker date="1524546120253" expanded="true" signature="2261:2315" ph="insert into roomMembers... " />
-                <marker date="1524546120253" expanded="true" signature="4696:4790" ph="select count... user" />
-                <marker date="1524546120253" expanded="true" signature="5249:5335" ph="insert into user... " />
-                <marker date="1524546120253" expanded="true" signature="6038:6096" ph="select count... user" />
-                <marker date="1524546120253" expanded="true" signature="6422:6485" ph="select id, f... user" />
+                <marker date="1524584518714" expanded="true" signature="1071:1118" ph="select id, f... user" />
+                <marker date="1524584518714" expanded="true" signature="1316:1355" ph="select * fro... rooms" />
+                <marker date="1524584518714" expanded="true" signature="1498:1630" ph="select disti... roomMembers" />
+                <marker date="1524584518714" expanded="true" signature="2433:2487" ph="insert into roomMembers... " />
+                <marker date="1524584518714" expanded="true" signature="5583:5677" ph="select count... user" />
+                <marker date="1524584518714" expanded="true" signature="6136:6222" ph="insert into user... " />
+                <marker date="1524584518714" expanded="true" signature="6925:6983" ph="select count... user" />
+                <marker date="1524584518714" expanded="true" signature="7309:7372" ph="select id, f... user" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="sqlite_master" pinned="false" current-in-tab="false">
-        <entry file="das://table:/1b40b60a/c8147345-a617-4a88-b315-99470e3339a9/main.sqlite_master">
+      <file leaf-file-name="rooms" pinned="false" current-in-tab="false">
+        <entry file="das://table:/6b115031/166446b7-b0fd-4889-998a-c4feb6c1c9ae/main.rooms">
           <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
             <state>
               <filtering enabled="true" />
@@ -98,18 +82,8 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="codecs.py" pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/codecs.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="606">
-              <caret line="319" column="0" lean-forward="false" selection-start-line="319" selection-start-column="0" selection-end-line="319" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="user" pinned="false" current-in-tab="false">
-        <entry file="das://table:/1b40b60a/c8147345-a617-4a88-b315-99470e3339a9/main.user">
+        <entry file="das://table:/6b115031/166446b7-b0fd-4889-998a-c4feb6c1c9ae/main.user">
           <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
             <state>
               <filtering enabled="true" />
@@ -120,18 +94,9 @@
       <file leaf-file-name="Client.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Client.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="510">
-              <caret line="36" column="48" lean-forward="false" selection-start-line="36" selection-start-column="41" selection-end-line="36" selection-end-column="48" />
+            <state relative-caret-position="15">
+              <caret line="31" column="31" lean-forward="false" selection-start-line="31" selection-start-column="31" selection-end-line="31" selection-end-column="31" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="roomMembers" pinned="false" current-in-tab="false">
-        <entry file="das://table:/1b40b60a/c8147345-a617-4a88-b315-99470e3339a9/main.roomMembers">
-          <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-            <state>
-              <filtering enabled="true" />
             </state>
           </provider>
         </entry>
@@ -139,20 +104,11 @@
       <file leaf-file-name="Utilities.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Utilities.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="474">
-              <caret line="56" column="27" lean-forward="true" selection-start-line="56" selection-start-column="27" selection-end-line="56" selection-end-column="27" />
+            <state relative-caret-position="222">
+              <caret line="79" column="31" lean-forward="true" selection-start-line="79" selection-start-column="31" selection-end-line="79" selection-end-column="31" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="rooms" pinned="false" current-in-tab="false">
-        <entry file="das://table:/1b40b60a/c8147345-a617-4a88-b315-99470e3339a9/main.rooms">
-          <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-            <state>
-              <filtering enabled="true" />
             </state>
           </provider>
         </entry>
@@ -163,8 +119,7 @@
     <findStrings>
       <find>socket</find>
       <find>port</find>
-      <find>UserConnectionList.append</find>
-      <find>print</find>
+      <find>clientSocket.send</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -173,12 +128,15 @@
       <GitPushTagMode />
     </option>
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Server.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/Utilities.py" root0="SKIP_INSPECTION" />
+  </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
         <option value="$APPLICATION_CONFIG_DIR$/consoles/db/c8147345-a617-4a88-b315-99470e3339a9/console_1.sql" />
         <option value="$PROJECT_DIR$/Client.py" />
-        <option value="$APPLICATION_CONFIG_DIR$/consoles/db/c8147345-a617-4a88-b315-99470e3339a9/console_2.sql" />
         <option value="$PROJECT_DIR$/Utilities.py" />
         <option value="$PROJECT_DIR$/Server.py" />
       </list>
@@ -191,10 +149,10 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="2621" />
-    <option name="y" value="212" />
-    <option name="width" value="1789" />
-    <option name="height" value="1110" />
+    <option name="x" value="4" />
+    <option name="y" value="23" />
+    <option name="width" value="1284" />
+    <option name="height" value="741" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -212,6 +170,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -223,8 +183,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -248,6 +206,8 @@
           <PATH vcs="Git" revision="">$PROJECT_DIR$/.gitignore</PATH>
           <PATH vcs="Git" revision="">$PROJECT_DIR$/.idea/workspace.xml</PATH>
           <PATH vcs="Git" revision="">$PROJECT_DIR$/Client.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/Server.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/Utilities.py</PATH>
           <PATH vcs="Git" revision="">$PROJECT_DIR$/user.db</PATH>
         </FILE-GROUP>
         <FILE-GROUP>
@@ -510,49 +470,35 @@
       <option name="project" value="LOCAL" />
       <updated>1523933019258</updated>
     </task>
-    <task id="LOCAL-00005" summary="fixes">
-      <created>1523933088841</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1523933088841</updated>
-    </task>
-    <task id="LOCAL-00006" summary="first major change">
-      <created>1524546081714</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1524546081714</updated>
-    </task>
-    <option name="localTasksCounter" value="7" />
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="2552" y="230" width="1936" height="1096" extended-state="6" />
+    <frame x="0" y="23" width="1280" height="741" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.328125" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32824427" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33203125" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32884902" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32817337" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32817337" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32972136" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Database Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32890624" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1380597" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18659128" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1705757" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2092084" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="SciView" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Concurrent Activities Diagram" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32890624" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29367328" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2936345" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Database Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3295562" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Concurrent Activities Diagram" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3295562" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -563,12 +509,11 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="fixes" />
-    <MESSAGE value="first major change" />
-    <option name="LAST_COMMIT_MESSAGE" value="first major change" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="6" />
+      <option name="time" value="3" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -576,43 +521,32 @@
     <entry file="file://$PROJECT_DIR$/Server.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
-          <caret line="0" column="11" lean-forward="false" selection-start-line="0" selection-start-column="11" selection-end-line="0" selection-end-column="11" />
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#13#35#0" expanded="true" />
-            <marker date="1524546120253" expanded="true" signature="1070:1117" ph="select id, f... user" />
-            <marker date="1524546120253" expanded="true" signature="1309:1328" ph="select * fro... rooms" />
-            <marker date="1524546120253" expanded="true" signature="1309:1348" ph="select * fro... rooms" />
-            <marker date="1524546120253" expanded="true" signature="1491:1550" ph="select u.* f... " />
-            <marker date="1524546120253" expanded="true" signature="1491:1551" ph="select u.* f... roomMembers" />
-            <marker date="1524546120253" expanded="true" signature="1491:1623" ph="select u.* f... roomMembers" />
-            <marker date="1524546120253" expanded="true" signature="2261:2315" ph="insert into roomMembers... " />
-            <marker date="1524546120253" expanded="true" signature="4696:4790" ph="select count... user" />
-            <marker date="1524546120253" expanded="true" signature="5249:5335" ph="insert into user... " />
-            <marker date="1524546120253" expanded="true" signature="6038:6096" ph="select count... user" />
-            <marker date="1524546120253" expanded="true" signature="6422:6485" ph="select id, f... user" />
+            <marker date="1524584518714" expanded="true" signature="1071:1118" ph="select id, f... user" />
+            <marker date="1524584518714" expanded="true" signature="1316:1355" ph="select * fro... rooms" />
+            <marker date="1524584518714" expanded="true" signature="1498:1630" ph="select disti... roomMembers" />
+            <marker date="1524584518714" expanded="true" signature="2433:2487" ph="insert into roomMembers... " />
+            <marker date="1524584518714" expanded="true" signature="5583:5677" ph="select count... user" />
+            <marker date="1524584518714" expanded="true" signature="6136:6222" ph="insert into user... " />
+            <marker date="1524584518714" expanded="true" signature="6925:6983" ph="select count... user" />
+            <marker date="1524584518714" expanded="true" signature="7309:7372" ph="select id, f... user" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/codecs.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5423">
-          <caret line="319" column="0" lean-forward="false" selection-start-line="319" selection-start-column="0" selection-end-line="319" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Client.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="544">
-          <caret line="37" column="31" lean-forward="false" selection-start-line="37" selection-start-column="26" selection-end-line="37" selection-end-column="31" />
+        <state relative-caret-position="480">
+          <caret line="37" column="31" lean-forward="false" selection-start-line="37" selection-start-column="31" selection-end-line="37" selection-end-column="31" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Utilities.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1190">
+        <state relative-caret-position="1065">
           <caret line="71" column="28" lean-forward="false" selection-start-line="71" selection-start-column="28" selection-end-line="71" selection-end-column="28" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
@@ -620,84 +554,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="das://table:/1b40b60a/c8147345-a617-4a88-b315-99470e3339a9/main.user">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Server.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="11" lean-forward="true" selection-start-line="0" selection-start-column="11" selection-end-line="0" selection-end-column="11" />
-          <folding>
-            <element signature="e#13#35#0" expanded="true" />
-            <marker date="1524546120253" expanded="true" signature="1070:1117" ph="select id, f... user" />
-            <marker date="1524546120253" expanded="true" signature="1309:1328" ph="select * fro... rooms" />
-            <marker date="1524546120253" expanded="true" signature="1309:1348" ph="select * fro... rooms" />
-            <marker date="1524546120253" expanded="true" signature="1491:1550" ph="select u.* f... " />
-            <marker date="1524546120253" expanded="true" signature="1491:1551" ph="select u.* f... roomMembers" />
-            <marker date="1524546120253" expanded="true" signature="1491:1623" ph="select u.* f... roomMembers" />
-            <marker date="1524546120253" expanded="true" signature="2261:2315" ph="insert into roomMembers... " />
-            <marker date="1524546120253" expanded="true" signature="4696:4790" ph="select count... user" />
-            <marker date="1524546120253" expanded="true" signature="5249:5335" ph="insert into user... " />
-            <marker date="1524546120253" expanded="true" signature="6038:6096" ph="select count... user" />
-            <marker date="1524546120253" expanded="true" signature="6422:6485" ph="select id, f... user" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/codecs.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5423">
-          <caret line="319" column="0" lean-forward="false" selection-start-line="319" selection-start-column="0" selection-end-line="319" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Client.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="544">
-          <caret line="37" column="31" lean-forward="false" selection-start-line="37" selection-start-column="26" selection-end-line="37" selection-end-column="31" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Utilities.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1190">
-          <caret line="71" column="28" lean-forward="false" selection-start-line="71" selection-start-column="28" selection-end-line="71" selection-end-column="28" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="das://table:/1b40b60a/c8147345-a617-4a88-b315-99470e3339a9/main.user">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Server.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#13#35#0" expanded="true" />
-            <marker date="1524546120253" expanded="true" signature="1070:1117" ph="select id, f... user" />
-            <marker date="1524546120253" expanded="true" signature="1309:1328" ph="select * fro... rooms" />
-            <marker date="1524546120253" expanded="true" signature="1309:1348" ph="select * fro... rooms" />
-            <marker date="1524546120253" expanded="true" signature="1491:1550" ph="select u.* f... " />
-            <marker date="1524546120253" expanded="true" signature="1491:1551" ph="select u.* f... roomMembers" />
-            <marker date="1524546120253" expanded="true" signature="1491:1623" ph="select u.* f... roomMembers" />
-            <marker date="1524546120253" expanded="true" signature="2261:2315" ph="insert into roomMembers... " />
-            <marker date="1524546120253" expanded="true" signature="4696:4790" ph="select count... user" />
-            <marker date="1524546120253" expanded="true" signature="5249:5335" ph="insert into user... " />
-            <marker date="1524546120253" expanded="true" signature="6038:6096" ph="select count... user" />
-            <marker date="1524546120253" expanded="true" signature="6422:6485" ph="select id, f... user" />
+            <marker date="1524584518714" expanded="true" signature="1071:1118" ph="select id, f... user" />
+            <marker date="1524584518714" expanded="true" signature="1316:1355" ph="select * fro... rooms" />
+            <marker date="1524584518714" expanded="true" signature="1498:1630" ph="select disti... roomMembers" />
+            <marker date="1524584518714" expanded="true" signature="2433:2487" ph="insert into roomMembers... " />
+            <marker date="1524584518714" expanded="true" signature="5583:5677" ph="select count... user" />
+            <marker date="1524584518714" expanded="true" signature="6136:6222" ph="insert into user... " />
+            <marker date="1524584518714" expanded="true" signature="6925:6983" ph="select count... user" />
+            <marker date="1524584518714" expanded="true" signature="7309:7372" ph="select id, f... user" />
           </folding>
         </state>
       </provider>
@@ -708,17 +578,14 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#13#35#0" expanded="true" />
-            <marker date="1524546120253" expanded="true" signature="1070:1117" ph="select id, f... user" />
-            <marker date="1524546120253" expanded="true" signature="1309:1328" ph="select * fro... rooms" />
-            <marker date="1524546120253" expanded="true" signature="1309:1348" ph="select * fro... rooms" />
-            <marker date="1524546120253" expanded="true" signature="1491:1550" ph="select u.* f... " />
-            <marker date="1524546120253" expanded="true" signature="1491:1551" ph="select u.* f... roomMembers" />
-            <marker date="1524546120253" expanded="true" signature="1491:1623" ph="select u.* f... roomMembers" />
-            <marker date="1524546120253" expanded="true" signature="2261:2315" ph="insert into roomMembers... " />
-            <marker date="1524546120253" expanded="true" signature="4696:4790" ph="select count... user" />
-            <marker date="1524546120253" expanded="true" signature="5249:5335" ph="insert into user... " />
-            <marker date="1524546120253" expanded="true" signature="6038:6096" ph="select count... user" />
-            <marker date="1524546120253" expanded="true" signature="6422:6485" ph="select id, f... user" />
+            <marker date="1524584518714" expanded="true" signature="1071:1118" ph="select id, f... user" />
+            <marker date="1524584518714" expanded="true" signature="1316:1355" ph="select * fro... rooms" />
+            <marker date="1524584518714" expanded="true" signature="1498:1630" ph="select disti... roomMembers" />
+            <marker date="1524584518714" expanded="true" signature="2433:2487" ph="insert into roomMembers... " />
+            <marker date="1524584518714" expanded="true" signature="5583:5677" ph="select count... user" />
+            <marker date="1524584518714" expanded="true" signature="6136:6222" ph="insert into user... " />
+            <marker date="1524584518714" expanded="true" signature="6925:6983" ph="select count... user" />
+            <marker date="1524584518714" expanded="true" signature="7309:7372" ph="select id, f... user" />
           </folding>
         </state>
       </provider>
@@ -729,74 +596,38 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#13#35#0" expanded="true" />
-            <marker date="1524546120253" expanded="true" signature="1070:1117" ph="select id, f... user" />
-            <marker date="1524546120253" expanded="true" signature="1309:1328" ph="select * fro... rooms" />
-            <marker date="1524546120253" expanded="true" signature="1309:1348" ph="select * fro... rooms" />
-            <marker date="1524546120253" expanded="true" signature="1491:1550" ph="select u.* f... " />
-            <marker date="1524546120253" expanded="true" signature="1491:1551" ph="select u.* f... roomMembers" />
-            <marker date="1524546120253" expanded="true" signature="1491:1623" ph="select u.* f... roomMembers" />
-            <marker date="1524546120253" expanded="true" signature="2261:2315" ph="insert into roomMembers... " />
-            <marker date="1524546120253" expanded="true" signature="4696:4790" ph="select count... user" />
-            <marker date="1524546120253" expanded="true" signature="5249:5335" ph="insert into user... " />
-            <marker date="1524546120253" expanded="true" signature="6038:6096" ph="select count... user" />
-            <marker date="1524546120253" expanded="true" signature="6422:6485" ph="select id, f... user" />
+            <marker date="1524584518714" expanded="true" signature="1071:1118" ph="select id, f... user" />
+            <marker date="1524584518714" expanded="true" signature="1316:1355" ph="select * fro... rooms" />
+            <marker date="1524584518714" expanded="true" signature="1498:1630" ph="select disti... roomMembers" />
+            <marker date="1524584518714" expanded="true" signature="2433:2487" ph="insert into roomMembers... " />
+            <marker date="1524584518714" expanded="true" signature="5583:5677" ph="select count... user" />
+            <marker date="1524584518714" expanded="true" signature="6136:6222" ph="insert into user... " />
+            <marker date="1524584518714" expanded="true" signature="6925:6983" ph="select count... user" />
+            <marker date="1524584518714" expanded="true" signature="7309:7372" ph="select id, f... user" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/c8147345-a617-4a88-b315-99470e3339a9/console.sql">
+    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/c8147345-a617-4a88-b315-99470e3339a9/console.sql" />
+    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/c8147345-a617-4a88-b315-99470e3339a9/console_1.sql" />
+    <entry file="das://table:/1b40b60a/c8147345-a617-4a88-b315-99470e3339a9/main.user" />
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/codecs.py" />
+    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/166446b7-b0fd-4889-998a-c4feb6c1c9ae/console.sql">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/c8147345-a617-4a88-b315-99470e3339a9/console_1.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="43" lean-forward="false" selection-start-line="0" selection-start-column="43" selection-end-line="0" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="das://src:table:/1b40b60a/c8147345-a617-4a88-b315-99470e3339a9/main.roomMembers">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" column="13" lean-forward="false" selection-start-line="1" selection-start-column="13" selection-end-line="1" selection-end-column="13" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/codecs.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="606">
-          <caret line="319" column="0" lean-forward="false" selection-start-line="319" selection-start-column="0" selection-end-line="319" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/c8147345-a617-4a88-b315-99470e3339a9/console_2.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="40" lean-forward="false" selection-start-line="0" selection-start-column="40" selection-end-line="0" selection-end-column="40" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="das://table:/1b40b60a/c8147345-a617-4a88-b315-99470e3339a9/main.sqlite_master">
+    <entry file="das://table:/6b115031/166446b7-b0fd-4889-998a-c4feb6c1c9ae/main.user">
       <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
         <state>
           <filtering enabled="true" />
         </state>
       </provider>
     </entry>
-    <entry file="das://table:/1b40b60a/c8147345-a617-4a88-b315-99470e3339a9/main.roomMembers">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="das://table:/1b40b60a/c8147345-a617-4a88-b315-99470e3339a9/main.user">
+    <entry file="das://table:/6b115031/166446b7-b0fd-4889-998a-c4feb6c1c9ae/main.rooms">
       <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
         <state>
           <filtering enabled="true" />
@@ -805,54 +636,36 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Client.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="36" column="48" lean-forward="false" selection-start-line="36" selection-start-column="41" selection-end-line="36" selection-end-column="48" />
+        <state relative-caret-position="15">
+          <caret line="31" column="31" lean-forward="false" selection-start-line="31" selection-start-column="31" selection-end-line="31" selection-end-column="31" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="das://table:/1b40b60a/c8147345-a617-4a88-b315-99470e3339a9/main.rooms">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Utilities.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="474">
-          <caret line="56" column="27" lean-forward="true" selection-start-line="56" selection-start-column="27" selection-end-line="56" selection-end-column="27" />
+        <state relative-caret-position="222">
+          <caret line="79" column="31" lean-forward="true" selection-start-line="79" selection-start-column="31" selection-end-line="79" selection-end-column="31" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/.PyCharm2017.3/system/python_stubs/699381051/builtins.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="617">
-          <caret line="4185" column="0" lean-forward="true" selection-start-line="4185" selection-start-column="0" selection-end-line="4185" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Server.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="612">
-          <caret line="48" column="43" lean-forward="false" selection-start-line="48" selection-start-column="43" selection-end-line="48" selection-end-column="43" />
+        <state relative-caret-position="260">
+          <caret line="89" column="42" lean-forward="true" selection-start-line="89" selection-start-column="42" selection-end-line="89" selection-end-column="42" />
           <folding>
             <element signature="e#13#35#0" expanded="true" />
-            <marker date="1524546120253" expanded="true" signature="1070:1117" ph="select id, f... user" />
-            <marker date="1524546120253" expanded="true" signature="1309:1328" ph="select * fro... rooms" />
-            <marker date="1524546120253" expanded="true" signature="1309:1348" ph="select * fro... rooms" />
-            <marker date="1524546120253" expanded="true" signature="1491:1550" ph="select u.* f... " />
-            <marker date="1524546120253" expanded="true" signature="1491:1551" ph="select u.* f... roomMembers" />
-            <marker date="1524546120253" expanded="true" signature="1491:1623" ph="select u.* f... roomMembers" />
-            <marker date="1524546120253" expanded="true" signature="2261:2315" ph="insert into roomMembers... " />
-            <marker date="1524546120253" expanded="true" signature="4696:4790" ph="select count... user" />
-            <marker date="1524546120253" expanded="true" signature="5249:5335" ph="insert into user... " />
-            <marker date="1524546120253" expanded="true" signature="6038:6096" ph="select count... user" />
-            <marker date="1524546120253" expanded="true" signature="6422:6485" ph="select id, f... user" />
+            <marker date="1524584518714" expanded="true" signature="1071:1118" ph="select id, f... user" />
+            <marker date="1524584518714" expanded="true" signature="1316:1355" ph="select * fro... rooms" />
+            <marker date="1524584518714" expanded="true" signature="1498:1630" ph="select disti... roomMembers" />
+            <marker date="1524584518714" expanded="true" signature="2433:2487" ph="insert into roomMembers... " />
+            <marker date="1524584518714" expanded="true" signature="5583:5677" ph="select count... user" />
+            <marker date="1524584518714" expanded="true" signature="6136:6222" ph="insert into user... " />
+            <marker date="1524584518714" expanded="true" signature="6925:6983" ph="select count... user" />
+            <marker date="1524584518714" expanded="true" signature="7309:7372" ph="select id, f... user" />
           </folding>
         </state>
       </provider>

@@ -29,7 +29,7 @@ class Application(Tk):
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
 
-        self.serverPort = 12010
+        self.serverPort = 12005
         self.serverName = "localhost" #I.P Address
         self.clientSocket = socket(AF_INET, SOCK_STREAM)
         # get friends from User by sending a request to the server and recieving the information
