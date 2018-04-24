@@ -3,10 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="03d3ccb2-8baf-4a4f-b22a-58002b1e53f6" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/Client.py" afterPath="$PROJECT_DIR$/Client.py" />
-      <change beforePath="$PROJECT_DIR$/Server.py" afterPath="$PROJECT_DIR$/Server.py" />
-      <change beforePath="$PROJECT_DIR$/Utilities.py" afterPath="$PROJECT_DIR$/Utilities.py" />
-      <change beforePath="$PROJECT_DIR$/user.db" afterPath="$PROJECT_DIR$/user.db" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -73,21 +69,21 @@
       <file leaf-file-name="Server.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Server.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="629">
-              <caret line="49" column="31" lean-forward="true" selection-start-line="49" selection-start-column="31" selection-end-line="49" selection-end-column="31" />
+            <state relative-caret-position="612">
+              <caret line="48" column="43" lean-forward="false" selection-start-line="48" selection-start-column="43" selection-end-line="48" selection-end-column="43" />
               <folding>
                 <element signature="e#13#35#0" expanded="true" />
-                <marker date="1524546071713" expanded="true" signature="1070:1117" ph="select id, f... user" />
-                <marker date="1524546071713" expanded="true" signature="1309:1328" ph="select * fro... rooms" />
-                <marker date="1524546071713" expanded="true" signature="1309:1348" ph="select * fro... rooms" />
-                <marker date="1524546071713" expanded="true" signature="1491:1550" ph="select u.* f... " />
-                <marker date="1524546071713" expanded="true" signature="1491:1551" ph="select u.* f... roomMembers" />
-                <marker date="1524546071713" expanded="true" signature="1491:1623" ph="select u.* f... roomMembers" />
-                <marker date="1524546071713" expanded="true" signature="2261:2315" ph="insert into roomMembers... " />
-                <marker date="1524546071713" expanded="true" signature="4696:4790" ph="select count... user" />
-                <marker date="1524546071713" expanded="true" signature="5249:5335" ph="insert into user... " />
-                <marker date="1524546071713" expanded="true" signature="6038:6096" ph="select count... user" />
-                <marker date="1524546071713" expanded="true" signature="6422:6485" ph="select id, f... user" />
+                <marker date="1524546120253" expanded="true" signature="1070:1117" ph="select id, f... user" />
+                <marker date="1524546120253" expanded="true" signature="1309:1328" ph="select * fro... rooms" />
+                <marker date="1524546120253" expanded="true" signature="1309:1348" ph="select * fro... rooms" />
+                <marker date="1524546120253" expanded="true" signature="1491:1550" ph="select u.* f... " />
+                <marker date="1524546120253" expanded="true" signature="1491:1551" ph="select u.* f... roomMembers" />
+                <marker date="1524546120253" expanded="true" signature="1491:1623" ph="select u.* f... roomMembers" />
+                <marker date="1524546120253" expanded="true" signature="2261:2315" ph="insert into roomMembers... " />
+                <marker date="1524546120253" expanded="true" signature="4696:4790" ph="select count... user" />
+                <marker date="1524546120253" expanded="true" signature="5249:5335" ph="insert into user... " />
+                <marker date="1524546120253" expanded="true" signature="6038:6096" ph="select count... user" />
+                <marker date="1524546120253" expanded="true" signature="6422:6485" ph="select id, f... user" />
               </folding>
             </state>
           </provider>
@@ -195,8 +191,8 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="2602" />
-    <option name="y" value="220" />
+    <option name="x" value="2621" />
+    <option name="y" value="212" />
     <option name="width" value="1789" />
     <option name="height" value="1110" />
   </component>
@@ -521,7 +517,14 @@
       <option name="project" value="LOCAL" />
       <updated>1523933088841</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="first major change">
+      <created>1524546081714</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1524546081714</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -529,7 +532,7 @@
     <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32890624" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.328125" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32824427" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33203125" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -560,7 +563,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="fixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixes" />
+    <MESSAGE value="first major change" />
+    <option name="LAST_COMMIT_MESSAGE" value="first major change" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -575,17 +579,17 @@
           <caret line="0" column="11" lean-forward="false" selection-start-line="0" selection-start-column="11" selection-end-line="0" selection-end-column="11" />
           <folding>
             <element signature="e#13#35#0" expanded="true" />
-            <marker date="1524546071713" expanded="true" signature="1070:1117" ph="select id, f... user" />
-            <marker date="1524546071713" expanded="true" signature="1309:1328" ph="select * fro... rooms" />
-            <marker date="1524546071713" expanded="true" signature="1309:1348" ph="select * fro... rooms" />
-            <marker date="1524546071713" expanded="true" signature="1491:1550" ph="select u.* f... " />
-            <marker date="1524546071713" expanded="true" signature="1491:1551" ph="select u.* f... roomMembers" />
-            <marker date="1524546071713" expanded="true" signature="1491:1623" ph="select u.* f... roomMembers" />
-            <marker date="1524546071713" expanded="true" signature="2261:2315" ph="insert into roomMembers... " />
-            <marker date="1524546071713" expanded="true" signature="4696:4790" ph="select count... user" />
-            <marker date="1524546071713" expanded="true" signature="5249:5335" ph="insert into user... " />
-            <marker date="1524546071713" expanded="true" signature="6038:6096" ph="select count... user" />
-            <marker date="1524546071713" expanded="true" signature="6422:6485" ph="select id, f... user" />
+            <marker date="1524546120253" expanded="true" signature="1070:1117" ph="select id, f... user" />
+            <marker date="1524546120253" expanded="true" signature="1309:1328" ph="select * fro... rooms" />
+            <marker date="1524546120253" expanded="true" signature="1309:1348" ph="select * fro... rooms" />
+            <marker date="1524546120253" expanded="true" signature="1491:1550" ph="select u.* f... " />
+            <marker date="1524546120253" expanded="true" signature="1491:1551" ph="select u.* f... roomMembers" />
+            <marker date="1524546120253" expanded="true" signature="1491:1623" ph="select u.* f... roomMembers" />
+            <marker date="1524546120253" expanded="true" signature="2261:2315" ph="insert into roomMembers... " />
+            <marker date="1524546120253" expanded="true" signature="4696:4790" ph="select count... user" />
+            <marker date="1524546120253" expanded="true" signature="5249:5335" ph="insert into user... " />
+            <marker date="1524546120253" expanded="true" signature="6038:6096" ph="select count... user" />
+            <marker date="1524546120253" expanded="true" signature="6422:6485" ph="select id, f... user" />
           </folding>
         </state>
       </provider>
@@ -629,17 +633,17 @@
           <caret line="0" column="11" lean-forward="true" selection-start-line="0" selection-start-column="11" selection-end-line="0" selection-end-column="11" />
           <folding>
             <element signature="e#13#35#0" expanded="true" />
-            <marker date="1524546071713" expanded="true" signature="1070:1117" ph="select id, f... user" />
-            <marker date="1524546071713" expanded="true" signature="1309:1328" ph="select * fro... rooms" />
-            <marker date="1524546071713" expanded="true" signature="1309:1348" ph="select * fro... rooms" />
-            <marker date="1524546071713" expanded="true" signature="1491:1550" ph="select u.* f... " />
-            <marker date="1524546071713" expanded="true" signature="1491:1551" ph="select u.* f... roomMembers" />
-            <marker date="1524546071713" expanded="true" signature="1491:1623" ph="select u.* f... roomMembers" />
-            <marker date="1524546071713" expanded="true" signature="2261:2315" ph="insert into roomMembers... " />
-            <marker date="1524546071713" expanded="true" signature="4696:4790" ph="select count... user" />
-            <marker date="1524546071713" expanded="true" signature="5249:5335" ph="insert into user... " />
-            <marker date="1524546071713" expanded="true" signature="6038:6096" ph="select count... user" />
-            <marker date="1524546071713" expanded="true" signature="6422:6485" ph="select id, f... user" />
+            <marker date="1524546120253" expanded="true" signature="1070:1117" ph="select id, f... user" />
+            <marker date="1524546120253" expanded="true" signature="1309:1328" ph="select * fro... rooms" />
+            <marker date="1524546120253" expanded="true" signature="1309:1348" ph="select * fro... rooms" />
+            <marker date="1524546120253" expanded="true" signature="1491:1550" ph="select u.* f... " />
+            <marker date="1524546120253" expanded="true" signature="1491:1551" ph="select u.* f... roomMembers" />
+            <marker date="1524546120253" expanded="true" signature="1491:1623" ph="select u.* f... roomMembers" />
+            <marker date="1524546120253" expanded="true" signature="2261:2315" ph="insert into roomMembers... " />
+            <marker date="1524546120253" expanded="true" signature="4696:4790" ph="select count... user" />
+            <marker date="1524546120253" expanded="true" signature="5249:5335" ph="insert into user... " />
+            <marker date="1524546120253" expanded="true" signature="6038:6096" ph="select count... user" />
+            <marker date="1524546120253" expanded="true" signature="6422:6485" ph="select id, f... user" />
           </folding>
         </state>
       </provider>
@@ -683,17 +687,17 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#13#35#0" expanded="true" />
-            <marker date="1524546071713" expanded="true" signature="1070:1117" ph="select id, f... user" />
-            <marker date="1524546071713" expanded="true" signature="1309:1328" ph="select * fro... rooms" />
-            <marker date="1524546071713" expanded="true" signature="1309:1348" ph="select * fro... rooms" />
-            <marker date="1524546071713" expanded="true" signature="1491:1550" ph="select u.* f... " />
-            <marker date="1524546071713" expanded="true" signature="1491:1551" ph="select u.* f... roomMembers" />
-            <marker date="1524546071713" expanded="true" signature="1491:1623" ph="select u.* f... roomMembers" />
-            <marker date="1524546071713" expanded="true" signature="2261:2315" ph="insert into roomMembers... " />
-            <marker date="1524546071713" expanded="true" signature="4696:4790" ph="select count... user" />
-            <marker date="1524546071713" expanded="true" signature="5249:5335" ph="insert into user... " />
-            <marker date="1524546071713" expanded="true" signature="6038:6096" ph="select count... user" />
-            <marker date="1524546071713" expanded="true" signature="6422:6485" ph="select id, f... user" />
+            <marker date="1524546120253" expanded="true" signature="1070:1117" ph="select id, f... user" />
+            <marker date="1524546120253" expanded="true" signature="1309:1328" ph="select * fro... rooms" />
+            <marker date="1524546120253" expanded="true" signature="1309:1348" ph="select * fro... rooms" />
+            <marker date="1524546120253" expanded="true" signature="1491:1550" ph="select u.* f... " />
+            <marker date="1524546120253" expanded="true" signature="1491:1551" ph="select u.* f... roomMembers" />
+            <marker date="1524546120253" expanded="true" signature="1491:1623" ph="select u.* f... roomMembers" />
+            <marker date="1524546120253" expanded="true" signature="2261:2315" ph="insert into roomMembers... " />
+            <marker date="1524546120253" expanded="true" signature="4696:4790" ph="select count... user" />
+            <marker date="1524546120253" expanded="true" signature="5249:5335" ph="insert into user... " />
+            <marker date="1524546120253" expanded="true" signature="6038:6096" ph="select count... user" />
+            <marker date="1524546120253" expanded="true" signature="6422:6485" ph="select id, f... user" />
           </folding>
         </state>
       </provider>
@@ -704,17 +708,17 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#13#35#0" expanded="true" />
-            <marker date="1524546071713" expanded="true" signature="1070:1117" ph="select id, f... user" />
-            <marker date="1524546071713" expanded="true" signature="1309:1328" ph="select * fro... rooms" />
-            <marker date="1524546071713" expanded="true" signature="1309:1348" ph="select * fro... rooms" />
-            <marker date="1524546071713" expanded="true" signature="1491:1550" ph="select u.* f... " />
-            <marker date="1524546071713" expanded="true" signature="1491:1551" ph="select u.* f... roomMembers" />
-            <marker date="1524546071713" expanded="true" signature="1491:1623" ph="select u.* f... roomMembers" />
-            <marker date="1524546071713" expanded="true" signature="2261:2315" ph="insert into roomMembers... " />
-            <marker date="1524546071713" expanded="true" signature="4696:4790" ph="select count... user" />
-            <marker date="1524546071713" expanded="true" signature="5249:5335" ph="insert into user... " />
-            <marker date="1524546071713" expanded="true" signature="6038:6096" ph="select count... user" />
-            <marker date="1524546071713" expanded="true" signature="6422:6485" ph="select id, f... user" />
+            <marker date="1524546120253" expanded="true" signature="1070:1117" ph="select id, f... user" />
+            <marker date="1524546120253" expanded="true" signature="1309:1328" ph="select * fro... rooms" />
+            <marker date="1524546120253" expanded="true" signature="1309:1348" ph="select * fro... rooms" />
+            <marker date="1524546120253" expanded="true" signature="1491:1550" ph="select u.* f... " />
+            <marker date="1524546120253" expanded="true" signature="1491:1551" ph="select u.* f... roomMembers" />
+            <marker date="1524546120253" expanded="true" signature="1491:1623" ph="select u.* f... roomMembers" />
+            <marker date="1524546120253" expanded="true" signature="2261:2315" ph="insert into roomMembers... " />
+            <marker date="1524546120253" expanded="true" signature="4696:4790" ph="select count... user" />
+            <marker date="1524546120253" expanded="true" signature="5249:5335" ph="insert into user... " />
+            <marker date="1524546120253" expanded="true" signature="6038:6096" ph="select count... user" />
+            <marker date="1524546120253" expanded="true" signature="6422:6485" ph="select id, f... user" />
           </folding>
         </state>
       </provider>
@@ -725,17 +729,17 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#13#35#0" expanded="true" />
-            <marker date="1524546071713" expanded="true" signature="1070:1117" ph="select id, f... user" />
-            <marker date="1524546071713" expanded="true" signature="1309:1328" ph="select * fro... rooms" />
-            <marker date="1524546071713" expanded="true" signature="1309:1348" ph="select * fro... rooms" />
-            <marker date="1524546071713" expanded="true" signature="1491:1550" ph="select u.* f... " />
-            <marker date="1524546071713" expanded="true" signature="1491:1551" ph="select u.* f... roomMembers" />
-            <marker date="1524546071713" expanded="true" signature="1491:1623" ph="select u.* f... roomMembers" />
-            <marker date="1524546071713" expanded="true" signature="2261:2315" ph="insert into roomMembers... " />
-            <marker date="1524546071713" expanded="true" signature="4696:4790" ph="select count... user" />
-            <marker date="1524546071713" expanded="true" signature="5249:5335" ph="insert into user... " />
-            <marker date="1524546071713" expanded="true" signature="6038:6096" ph="select count... user" />
-            <marker date="1524546071713" expanded="true" signature="6422:6485" ph="select id, f... user" />
+            <marker date="1524546120253" expanded="true" signature="1070:1117" ph="select id, f... user" />
+            <marker date="1524546120253" expanded="true" signature="1309:1328" ph="select * fro... rooms" />
+            <marker date="1524546120253" expanded="true" signature="1309:1348" ph="select * fro... rooms" />
+            <marker date="1524546120253" expanded="true" signature="1491:1550" ph="select u.* f... " />
+            <marker date="1524546120253" expanded="true" signature="1491:1551" ph="select u.* f... roomMembers" />
+            <marker date="1524546120253" expanded="true" signature="1491:1623" ph="select u.* f... roomMembers" />
+            <marker date="1524546120253" expanded="true" signature="2261:2315" ph="insert into roomMembers... " />
+            <marker date="1524546120253" expanded="true" signature="4696:4790" ph="select count... user" />
+            <marker date="1524546120253" expanded="true" signature="5249:5335" ph="insert into user... " />
+            <marker date="1524546120253" expanded="true" signature="6038:6096" ph="select count... user" />
+            <marker date="1524546120253" expanded="true" signature="6422:6485" ph="select id, f... user" />
           </folding>
         </state>
       </provider>
@@ -834,21 +838,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Server.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="629">
-          <caret line="49" column="31" lean-forward="true" selection-start-line="49" selection-start-column="31" selection-end-line="49" selection-end-column="31" />
+        <state relative-caret-position="612">
+          <caret line="48" column="43" lean-forward="false" selection-start-line="48" selection-start-column="43" selection-end-line="48" selection-end-column="43" />
           <folding>
             <element signature="e#13#35#0" expanded="true" />
-            <marker date="1524546071713" expanded="true" signature="1070:1117" ph="select id, f... user" />
-            <marker date="1524546071713" expanded="true" signature="1309:1328" ph="select * fro... rooms" />
-            <marker date="1524546071713" expanded="true" signature="1309:1348" ph="select * fro... rooms" />
-            <marker date="1524546071713" expanded="true" signature="1491:1550" ph="select u.* f... " />
-            <marker date="1524546071713" expanded="true" signature="1491:1551" ph="select u.* f... roomMembers" />
-            <marker date="1524546071713" expanded="true" signature="1491:1623" ph="select u.* f... roomMembers" />
-            <marker date="1524546071713" expanded="true" signature="2261:2315" ph="insert into roomMembers... " />
-            <marker date="1524546071713" expanded="true" signature="4696:4790" ph="select count... user" />
-            <marker date="1524546071713" expanded="true" signature="5249:5335" ph="insert into user... " />
-            <marker date="1524546071713" expanded="true" signature="6038:6096" ph="select count... user" />
-            <marker date="1524546071713" expanded="true" signature="6422:6485" ph="select id, f... user" />
+            <marker date="1524546120253" expanded="true" signature="1070:1117" ph="select id, f... user" />
+            <marker date="1524546120253" expanded="true" signature="1309:1328" ph="select * fro... rooms" />
+            <marker date="1524546120253" expanded="true" signature="1309:1348" ph="select * fro... rooms" />
+            <marker date="1524546120253" expanded="true" signature="1491:1550" ph="select u.* f... " />
+            <marker date="1524546120253" expanded="true" signature="1491:1551" ph="select u.* f... roomMembers" />
+            <marker date="1524546120253" expanded="true" signature="1491:1623" ph="select u.* f... roomMembers" />
+            <marker date="1524546120253" expanded="true" signature="2261:2315" ph="insert into roomMembers... " />
+            <marker date="1524546120253" expanded="true" signature="4696:4790" ph="select count... user" />
+            <marker date="1524546120253" expanded="true" signature="5249:5335" ph="insert into user... " />
+            <marker date="1524546120253" expanded="true" signature="6038:6096" ph="select count... user" />
+            <marker date="1524546120253" expanded="true" signature="6422:6485" ph="select id, f... user" />
           </folding>
         </state>
       </provider>
