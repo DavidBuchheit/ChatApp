@@ -33,8 +33,7 @@ class Application(Tk):
         self.serverName = "localhost" #I.P Address
         self.clientSocket = socket(AF_INET, SOCK_STREAM)
         # get friends from User by sending a request to the server and recieving the information
-        self.friendsArray = ['David Buchheit', 'Brandon Smith', 'Brandon Patz', 'Micheal Fahey',
-                        'Jordan Pryce', 'Devonte Mayo', 'Amanda McDermott', 'Eric Pombert']
+        self.friendsArray = []
         self.friendsFrame = Listbox(self)
 
         connected = False
@@ -231,7 +230,8 @@ class FriendsApp(Frame):
         self.fInput.pack(side=BOTTOM, padx=16, pady=4)
 
     def CurSelet(self, evt):
-        self.selectedFriend = self.friendsListFrame.curselection()[0]
+        if len(self.friendsListFrame.curselection()) > 0:
+            self.selectedFriend = self.friendsListFrame.curselection()[0]
 
     def addFriend(self):
         print("Add Friend:")
