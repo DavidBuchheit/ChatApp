@@ -5,16 +5,15 @@ from socket import *
 from _thread import *
 from datetime import *
 from time import *
-import Utilities
+from Utilities import Room, User, OverView
 
 
-serverPort = 12005
+serverPort = 12010
 serverSocket = socket(AF_INET, SOCK_STREAM)
 serverSocket.bind(('', serverPort))
 serverSocket.listen(10)
 
-UserConnectionList = []
-# OverView = OverView()
+OverView = OverView()
 ############################
 # Responses: Type \t Failure OR Success \r\n
 #        Ex: SendMessage \t Success \r\n
@@ -25,13 +24,56 @@ UserConnectionList = []
 
 def initiation():
     print("Server started.")
+    createEverything()
     while 1:
         print("Server ready to accept connections.")
         connectionSocket, addr = serverSocket.accept()
 
-        print(addr)
         start_new_thread(main, (connectionSocket,))
 
+
+#Utility function that creates every room and member when server is started.
+def createEverything():
+    database = lite.connect('user.db')
+    cursor = database.cursor()
+
+    #Gets every user and adds them to the list
+    users = cursor.execute("select id, firstName, lastName, email from user")
+    users = users.fetchall()
+
+    for i in range(len(users)):
+        OverView.users.append(User("", users[i][0],  users[i][1] + users[i][2],  users[i][3], 1))
+
+    rooms = cursor.execute("select * from rooms where deleted = '0' ")
+    rooms = rooms.fetchall()
+    #Makes every room and ends people to it
+    for i in range(len(rooms)):
+
+        people = cursor.execute("select distinct u.id, u.firstName, u.lastName, u.email from roomMembers as rm join user as u on u.id = rm.userID where rm.roomID = ?", [rooms[i][0]])
+        people = people.fetchall()
+        room = Room(rooms[i][2], rooms[i][1], rooms[i][0])
+        for j in range(len(people)):
+            for k in range(len(OverView.users)):
+                if(OverView.users[k].id == people[j][0]):
+                    room.joinUser(OverView.users[k])
+
+    return 0
+
+# JoinRoom \t UserID \t RoomID \r\n
+# JoinRoom \t Success \r\n
+def joinRoom(connectionSocket, request):
+    request = request.strip("\r\n")
+    request = request.split("\t")
+    UserID =  request[1]
+    roomID = request[2]
+
+    database = lite.connect('user.db')
+    cursor = database.cursor()
+    cursor.execute("insert into roomMembers values(roomID = ?, userID = ?)", [roomID, UserID])
+
+    connectionSocket.send("JoinRoom\tSuccess\r\n")
+
+    return 1
 
 def main(connectionSocket):
     print("main")
@@ -43,14 +85,33 @@ def main(connectionSocket):
             RegisterUser(request, connectionSocket)
         elif type[0] == "CheckLogin":
             loginCheck(request, connectionSocket)
+        elif type[0] == "SendMessage":
+            sendMessage(request, connectionSocket)
+        elif type[0] == "sendPrivateMessage":
+            sendPrivateMessage(request, connectionSocket)
+        elif type[0] == "joinRoom":
+            joinRoom(request, connectionSocket)
+        elif type[0] == "logout":
+            logout(request, connectionSocket)
+        elif type[0] == "createRoom":
+            createRoom(request, connectionSocket)
+        elif type[0] == "getOfflineMessages":
+            getOfflineMessages(request, connectionSocket)
+        elif type[0] == "FriendsList":
+            printFriendsList(request, connectionSocket)
 
 
 
-
-# SendMessage \t Message \r\n
+# SendMessage \t Message \t RoomID \r\n
 # SendMessage \t Success \r\n
 # SendMessage \t Failure \r\n
-def sendMessage():
+def sendMessage(request, connectionSocket):
+    request = request.strip("\r\n")
+    request = request.split("\t")
+    message = request[1]
+    roomID = request[2]
+
+
 
     print("sendMessage")
 
@@ -58,9 +119,14 @@ def sendMessage():
 # SendPrivateMessage \t Sender \t Receiver \t Message \r\n
 # SendPrivateMessage \t Success \r\n
 # SendPrivateMessage \t Failure \r\n
-def sendPrivateMessage():
+def sendPrivateMessage(request, connectionSocket):
     print("sendPrivateMessage")
 
+# CreateRoom \t Owner \t Name \t \r\n
+# CreateRoom \t Success \r\n
+# CreateRoom \t Failure \r\n
+def createRoom(request, connectionSocket):
+    print("as")
 
 # RegisterUser \t FirstName \t LastName \t Address \t Email \t password1 \r\n
 # RegisterUser \t Success \r\n
@@ -94,6 +160,8 @@ def RegisterUser(request, connectionSocket):
         database.commit()
         database.close()
         response = "RegisterUser\tSuccess\r\n"
+
+
         connectionSocket.send(response.encode())
         return ["Success", lastRowID, vals[0], vals[1], vals[3]]
 
@@ -110,7 +178,6 @@ def loginCheck(request, connectionSocket):
     email = type[1]
     password = type[2]
     password = password.strip('\r\n')
-    print("Checking " + email + " with " + password)
     loginValues = (email, password)
     loginCheck = database.execute("select count(*) from user where email = ? and password = ?", loginValues)
     count = loginCheck.fetchall()[0][0]
@@ -122,12 +189,17 @@ def loginCheck(request, connectionSocket):
         print("Login failure")
         return ["Failure"]
     else:
+
         infoValues = email
-        information = database.execute("select id, firstName, lastName from user where email = ?", [infoValues])
+        information = database.execute("select id, firstName, lastName, email from user where email = ?", [infoValues])
         info = information.fetchall()
         status = "CheckLogin\tSuccess\r\n"
         connectionSocket.send(status.encode())
+
+        OverView.userLogin(info[0][0], connectionSocket)
         database.close()
+
+        print(OverView.users)
         print("Login Successful")
         return ["Success"]
 
@@ -135,7 +207,7 @@ def loginCheck(request, connectionSocket):
 # FriendsList \t Success \t Array Of Friends \r\n
 # ArraySchema: User, Status
 # FriendsList \t Failure \r\n
-def printFriendsList():
+def printFriendsList(request, connectionSocket):
     print("printFriendsList")
 
 
@@ -154,17 +226,19 @@ def getFriendStatus():
 # OfflinePrivateMessages \t Success \t Messages Array \r\n
 # OfflinePrivateMessages \t Failure \t \r\n
 # ArraySchema: User, Message, Time
-def getOfflineMessages():
+def getOfflineMessages(request, connectionSocket):
     print("getOfflineMessages")
     #Grab all messages where their logout time is less than all messages
 
 # Logout \r\n
 # Logout \t Success \r\n
 # Logout \t Failure \r\n
-def logout():
+def logout(request, connectionSocket):
     print("Logout")
-
+    OverView.userLogout(connectionSocket)
     #update DB where their last online time is now and remove them from current users array
+
+
 
 if __name__ == '__main__':
     initiation()
