@@ -23,13 +23,15 @@ class Room:
                 player.socket.send(message.encode())
 
     def lostUser(self, user):
+        realUser = OverView.findUserByID(user)
         #if room owner, delete room
-        if self.owner == user.id :
+        if self.owner == realUser :
             self.players = {}
             OverView.deleteRoom(self.name)
+            return 1
         else:
-            self.players.pop(user)
-        print("lostUser")
+            self.players.pop(realUser)
+            return 0
 
     def containsUser(self, userID):
         for player in self.players:
@@ -130,4 +132,30 @@ class OverView:
             if(room.id == roomID):
                 room.sendMessage( findUsrBySocket(socket), message)
                 break
+
+    def getRoomMembers(self, roomID):
+        members = []
+        for room in self.rooms:
+            if( room.id == roomID):
+                for member in room.players:
+                    members.append({'Name': member.name, 'ID': member.id })
+            break
+        return members
+
+    def findRoomByID(self, roomID):
+        for room in self.rooms:
+            if room.id == roomID:
+                return room
+        return None
+
+    def leaveRoom(self, roomID, userID):
+        room = findRoomByID(roomID)
+        returnRes = room.lostUser(userID)
+        if(returnRes == 1):
+            return 1
+        else:
+            return room.players
+
+
+
 

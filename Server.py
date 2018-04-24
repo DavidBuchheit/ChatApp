@@ -25,7 +25,6 @@ OverView = OverView()
 def initiation():
     print("Server started.")
     createEverything()
-
     while 1:
         print("Server ready to accept connections.")
         connectionSocket, addr = serverSocket.accept()
@@ -76,7 +75,6 @@ def joinRoom(connectionSocket, request):
     cursor.execute("insert into roomMembers values(roomID = ?, userID = ?)", [roomID, UserID])
 
     connectionSocket.send("JoinRoom\tSuccess\r\n".encode() )
-    # connectionSocket.send( OverView.findUserByID(userID).encode() )
 
     return 1
 
@@ -91,10 +89,38 @@ def getMyRooms(connectionSocket, request):
 
     return 1
 
-# LeaveRoom
-# LeaveRoom \t Success \r\n
-# LeftRoom \t User \r\n Sends user info to clients when someone leaves room
+# RoomMembers \t RoomID \r\n
+# RoomMembers \t {MemberName, MemberID}
+def getRoomMembers(connectionSocket, request):
+    request = request.strip("\r\n")
+    request = request.split("\t")
+    roomID = int(request[1])
+
+    Users = OverView.getRoomMembers(roomID).__str__()
+    connectionSocket.send( "RoomMembers\t" + Users )
+    return 1
+
+# LeaveRoom \t roomID\r\n
+# LeaveRoom \t Success \t UserID \t RoomID \r\n
 def leaveRoom(connectionSocket, request):
+    #Removes User froom Room and sends all the other clients telling them that someone has left the room
+    database = lite.connect('user.db')
+    cursor = database.cursor()
+
+    request = request.strip("\r\n")
+    request = request.split("\t")
+    roomID = request[1]
+
+    user = OverView.findUserBySocket(connectionSocket)
+    userID = user.id
+
+    delete = cursor.execute("delete from roomMembers where roomID = ? and userID = ?", (roomID, userID))
+
+    #Send back all room members and delete the room member from list
+
+
+
+
     print("leaveRoom")
 
 def main(connectionSocket):
@@ -134,6 +160,8 @@ def sendMessage(request, connectionSocket):
     request = request.split("\t")
     message = request[1]
     roomID = int(request[2])
+    addTime = time.time()
+
 
     OverView.sendMessage(roomID, message, OverView.findUserBySocket(connectionSocket))
 
