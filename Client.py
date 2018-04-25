@@ -86,7 +86,9 @@ class Application(Tk):
 
     def refreshClient(self):
         '''refresh messages, groups, and friends'''
+
         #refresh rooms
+        self.roomsArray = []
         command = "RoomsInfo"
         self.serverSocket.send(command.encode())
         returnedRooms = self.serverSocket.recv(1024).decode('ascii')
@@ -105,6 +107,7 @@ class Application(Tk):
             self.roomsArray.append(newRoom)
 
         #refresh friends
+        self.friendsArray = []
         command = "FriendsList"
         self.serverSocket.send(command.encode())
         returnedFriends = self.serverSocket.recv(1024).decode('ascii')
@@ -121,6 +124,13 @@ class Application(Tk):
             newFriend = Friend(friendName, friendId)
             print(friendName + " : " + friendId.__str__())
             self.friendsArray.append(newFriend)
+
+        #refresh messages
+        self.messagesArray = []
+        for room in self.roomsArray:
+            command = "GetMessages\t" + room.roomId.__str__()
+            print(room.name + " : " + room.roomId.__str__())
+
 
 
     def toMessages(self):
