@@ -3,8 +3,7 @@
 import sqlite3 as lite
 from socket import *
 from _thread import *
-from datetime import *
-from time import *
+import time
 from Utilities import Room, User, OverView
 
 
@@ -21,10 +20,10 @@ OverView = OverView()
 #        Ex: RegisterUser \t FirstName \t LastName \t Address \t Email \t password1 \r\n
 ###########################
 
-
 def initiation():
     print("Server started.")
     createEverything()
+    time.time()
     while 1:
         print("Server ready to accept connections.")
         connectionSocket, addr = serverSocket.accept()
@@ -115,11 +114,9 @@ def leaveRoom(connectionSocket, request):
     userID = user.id
 
     delete = cursor.execute("delete from roomMembers where roomID = ? and userID = ?", (roomID, userID))
+    database.commit()
 
     #Send back all room members and delete the room member from list
-
-
-
 
     print("leaveRoom")
 
@@ -147,8 +144,6 @@ def main(connectionSocket):
             getOfflineMessages(request, connectionSocket)
         elif type[0] == "FriendsList":
             printFriendsList(request, connectionSocket)
-        elif type[0] == "RoomsInfo":
-            getMyRooms(request, connectionSocket)
 
 
 
@@ -162,19 +157,40 @@ def sendMessage(request, connectionSocket):
     request = request.split("\t")
     message = request[1]
     roomID = int(request[2])
-    addTime = time.time()
+    addTime = int(time.time())
+    user = OverView.findUserBySocket(connectionSocket)
 
-
+    database = lite.connect('user.db')
+    cursor = database.cursor()
+    insert = cursor.execute("insert into messages(userID, message, timeStamp, roomID) values(?, ? ,? ,? )",[user.id, message, addTime, roomID])
     OverView.sendMessage(roomID, message, OverView.findUserBySocket(connectionSocket))
 
     print("sendMessage")
 
 
-# SendPrivateMessage \t Sender \t Receiver \t Message \r\n
+# SendPrivateMessage \t ReceiverID \t Message \r\n
 # SendPrivateMessage \t Success \r\n
 # SendPrivateMessage \t Failure \r\n
+# RecievePrivateMessage \t Message \t Sender
 def sendPrivateMessage(request, connectionSocket):
+    database = lite.connect('user.db')
+    cursor = database.cursor()
     print("sendPrivateMessage")
+    request = request.strip("\r\n")
+    request = request.split("\t")
+    sender = OverView.findUserBySocket(connectionSocket)
+    receiverID = int(request[1])
+    receiver = OverView.findUserByID(receiverID)
+    message = request[2]
+    timeStamp = time.time()
+    receiver = OverView.findUserByID(receiverID)
+    insert = cursor.execute("insert into privateMessages(toUser, fromUser, message, timeStamp) values(?, ?, ?, ? )", [receiverID, sender.id, message, timeStamp])
+    connectionSocket.send("SendPrivateMessage\tSuccess")
+    if( receiver.status == 0  ):
+        print("Asd")
+
+
+
 
 # CreateRoom \t RoomName \r\n
 # CreateRoom \t Success \r\n
@@ -243,7 +259,6 @@ def loginCheck(request, connectionSocket):
         print("Login failure")
         return ["Failure"]
     else:
-
         infoValues = email
         information = database.execute("select id, firstName, lastName, email from user where email = ?", [infoValues])
         info = information.fetchall()
@@ -251,38 +266,96 @@ def loginCheck(request, connectionSocket):
         connectionSocket.send(status.encode())
 
         OverView.userLogin(info[0][0], connectionSocket)
-        database.close()
-
-        print(OverView.users)
+        now = time.time()
+        update = database.execute("update user set lastSeen = ? where email = ?", [int(now), email])
+        database.commit()
         print("Login Successful")
         return ["Success"]
 
 # FriendsList \r\n
 # FriendsList \t Success \t Array Of Friends \r\n
 # ArraySchema: User, Status
-# FriendsList \t Failure \r\n
+
 def printFriendsList(request, connectionSocket):
     print("printFriendsList")
 
+    database = lite.connect('user.db')
+    cursor = database.cursor()
+    user = OverView.findUserBySocket(connectionSocket)
 
-# FriendStatus \t Friend \r\n
+    users = cursor.execute("select distinct * from friends as f1, friends as f2 where f1.secondFriendID = f2.firstFriendID and f1.firstFriendID = f2.secondFriendID and (f1.firstFriendID = ?)", [user.id] )
+    users.fetchall()
+
+    friends = []
+    for i in range(len(users)):
+        secondPerson = OverView.findUserByID(users[i][1])
+        friends.append( {"Name": secondPerson.name, "Status": secondPerson.status } )
+
+    friends = friends.__str__()
+    connectionSocket.send("FriendsList\t" + friends + "\r\n")
+
+# AddFriend \t NewFriendID \t UserID \r\n
+# AddFriend \t Success \r\n
+def addFriend(request, connectionSocket):
+    database = lite.connect('user.db')
+    cursor = database.cursor()
+
+    request = request.strip("\r\n")
+    request = request.split("\t")
+
+    newFriend = request[1]
+    userID = request[2]
+    cursor.execute("insert into friends values(?, ?)", [newFriend, userID])
+
+    connectionSocket.send("AddFriend\tSuccess\r\n")
+
+
+
+# FriendStatus \t FriendID \r\n
 # FriendStatus \t Success \t Status \r\n
-# FriendStatus \t Requester \t Friend \r\n
-def getFriendStatus():
+def getFriendStatus(request, connectionSocket):
     print("getFriendStatus")
+    request = request.strip("\r\n")
+    request = request.split("\t")
+    friendID = request[1]
+
+    friend = OverView.findUserByID(friendID)
+
+    connectionSocket.send("FriendStatus\tSuccess\t" + friend.status + "\r\n" )
+    return 1
 
 
-# OfflineMessages \r\n
+# OfflineMessages \t roomID \r\n
 # OfflineMessages \t Success \t Messages Array \r\n
-# ArraySchema: User, Message, Time
+# ArraySchema: User, Message, Time, RoomID
 # OfflineMessages \t Failure \r\n
+
+def getOfflineMessages(request, connectionSocket):
+    database = lite.connect('user.db')
+    cursor = database.cursor()
+
+    request = request.strip("\r\n")
+    request = request.split("\t")
+
+    user = OverView.findUserBySocket(connectionSocket)
+    userID = user.id
+    roomID = request[1]
+
+    loadmessages = cursor.execute("select messages.* from messages join user on user.id = messages.userID where messages.timeStamp > user.lastSeen and user.id = ? and messages.roomID = ?", [userID, roomID] )
+    messages = []
+    for i in range(len(loadmessages)):
+        user = OverView.findUserByID( loadmessages[i][1])
+        messages.append( {'User': user.name, 'Message': loadmessages[i][2], 'Time': loadmessages[i][3], 'RoomID': loadmessages[i][4] })
+
+
+    print("getOfflineMessages")
+
+
 
 # OfflinePrivateMessages \t Success \t Messages Array \r\n
 # OfflinePrivateMessages \t Failure \t \r\n
 # ArraySchema: User, Message, Time
-def getOfflineMessages(request, connectionSocket):
-    print("getOfflineMessages")
-    #Grab all messages where their logout time is less than all messages
+
 
 # Logout \r\n
 # Logout \t Success \r\n
