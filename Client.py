@@ -1,10 +1,29 @@
 import sys
 from tkinter import *
 from socket import *
-from Utilities import User, Room
 import platform
 import atexit
 import unicodedata
+
+
+class Room:
+    def __init__(self, name, roomId):
+        self.name = name
+        self.roomId = roomId
+
+
+class Friend:
+    def __init__(self, name, friendId):
+        self.name = name
+        self.friendId = friendId
+
+
+class Message:
+    def __init__(self, name, messageId):
+        self.name = name
+        self.messageId = messageId
+
+
 class Application(Tk):
     def __init__(self, *args, **kwargs):
         Tk.__init__(self, *args, **kwargs)
@@ -34,7 +53,7 @@ class Application(Tk):
         # get friends from User by sending a request to the server and recieving the information
         self.friendsArray = []
         self.roomsArray = []
-        self.messagesArray = []
+        self.messagesArray = {}
         self.friendsFrame = Listbox(self)
         self.friendsGroupFrame = Listbox(self)
 
@@ -72,6 +91,37 @@ class Application(Tk):
         self.serverSocket.send(command.encode())
         returnedRooms = self.serverSocket.recv(1024).decode('ascii')
         print(returnedRooms)
+        returnedRooms = returnedRooms.split('\t')
+        returnedRooms = returnedRooms[1].__str__()
+
+        rooms = self.grabObjectsFromString(returnedRooms)
+
+        for r in rooms:
+            roomName = (r.split(',')[0].__str__().split(':')[1])
+            roomName = roomName[2:-1]
+            roomId = int((r.split(',')[1].__str__().split(':')[1].split(' ')[1]))
+            newRoom = Room(roomName, roomId)
+            print(roomName + " : " + roomId.__str__())
+            self.roomsArray.append(newRoom)
+
+        #refresh friends
+        command = "FriendsList"
+        self.serverSocket.send(command.encode())
+        returnedFriends = self.serverSocket.recv(1024).decode('ascii')
+        print(returnedFriends)
+        returnedFriends = returnedFriends.split('\t')
+        returnedFriends = returnedFriends[1].__str__()
+
+        friends = self.grabObjectsFromString(returnedFriends)
+
+        for f in friends:
+            friendName = (f.split(',')[0].__str__().split(':')[1])
+            friendName = friendName[2:-1]
+            friendId = int((f.split(',')[1].__str__().split(':')[1].split(' ')[1]))
+            newFriend = Friend(friendName, friendId)
+            print(friendName + " : " + friendId.__str__())
+            self.friendsArray.append(newFriend)
+
 
     def toMessages(self):
         self.show_frame("MessagesApp")
@@ -83,6 +133,23 @@ class Application(Tk):
         '''Show a frame for the given page name'''
         frame = self.frames[page_name]
         frame.tkraise()
+
+    def grabObjectsFromString(self, arrString):
+        objects = []
+        objectStr = ""
+        created = False
+        for i in range(len(arrString)):
+            if arrString[i] == '{' or arrString[i] == '[':
+                created = False
+            elif arrString[i] == '}':
+                if created == False:
+                    objects.append(objectStr)
+                    objectStr = ""
+                    created = True
+            elif created == False:
+                objectStr += arrString[i]
+
+        return objects
 
 
 class MessagesApp(Frame):
@@ -245,6 +312,7 @@ class FriendsApp(Frame):
             self.selectedFriend = self.controller.friendsGroupFrame.curselection()[0]
 
     def addFriend(self):
+        self.controller.refreshClient()
         print("Add Friend:")
 
     def removeFriend(self):
@@ -257,6 +325,7 @@ class FriendsApp(Frame):
                 self.controller.friendsGroupFrame.insert(END, friend)
                 self.controller.friendsFrame.insert(END, friend)
             self.selectedFriend = -1
+            self.controller.refreshClient()
 
 
 class FailedConnection(Frame):
