@@ -7,7 +7,7 @@ import time
 from Utilities import Room, User, OverView
 
 
-serverPort = 12010
+serverPort = 12017
 serverSocket = socket(AF_INET, SOCK_STREAM)
 serverSocket.bind(('', serverPort))
 serverSocket.listen(10)
@@ -23,7 +23,6 @@ OverView = OverView()
 def initiation():
     print("Server started.")
     createEverything()
-    time.time()
     while 1:
         print("Server ready to accept connections.")
         connectionSocket, addr = serverSocket.accept()
@@ -81,6 +80,8 @@ def joinRoom(connectionSocket, request):
 # YourRooms { RoomName, RoomID } \r\n
 def getMyRooms(connectionSocket, request):
     user = OverView.findUserBySocket(connectionSocket)
+
+    print(user)
     print("Get Rooms")
     rooms = OverView.grabRoomsWithUser(user.id)
     send = "YourRooms\t" + rooms.__str__()
@@ -96,7 +97,7 @@ def getRoomMembers(connectionSocket, request):
     roomID = int(request[1])
 
     Users = OverView.getRoomMembers(roomID).__str__()
-    connectionSocket.send( "RoomMembers\t" + Users )
+    connectionSocket.send( ("RoomMembers\t" + Users).encode() )
     return 1
 
 # LeaveRoom \t roomID\r\n
@@ -144,6 +145,8 @@ def main(connectionSocket):
             getOfflineMessages(request, connectionSocket)
         elif type[0] == "FriendsList":
             printFriendsList(request, connectionSocket)
+        elif type[0] == "RoomsInfo":
+            printFriendsList(request, connectionSocket)
 
 
 
@@ -185,12 +188,7 @@ def sendPrivateMessage(request, connectionSocket):
     timeStamp = time.time()
     receiver = OverView.findUserByID(receiverID)
     insert = cursor.execute("insert into privateMessages(toUser, fromUser, message, timeStamp) values(?, ?, ?, ? )", [receiverID, sender.id, message, timeStamp])
-    connectionSocket.send("SendPrivateMessage\tSuccess")
-    if( receiver.status == 0  ):
-        print("Asd")
-
-
-
+    connectionSocket.send(("SendPrivateMessage\tSuccess").encode())
 
 # CreateRoom \t RoomName \r\n
 # CreateRoom \t Success \r\n
@@ -284,7 +282,7 @@ def printFriendsList(request, connectionSocket):
     user = OverView.findUserBySocket(connectionSocket)
 
     users = cursor.execute("select distinct * from friends as f1, friends as f2 where f1.secondFriendID = f2.firstFriendID and f1.firstFriendID = f2.secondFriendID and (f1.firstFriendID = ?)", [user.id] )
-    users.fetchall()
+    users = users.fetchall()
 
     friends = []
     for i in range(len(users)):
@@ -292,7 +290,7 @@ def printFriendsList(request, connectionSocket):
         friends.append( {"Name": secondPerson.name, "Status": secondPerson.status } )
 
     friends = friends.__str__()
-    connectionSocket.send("FriendsList\t" + friends + "\r\n")
+    connectionSocket.send(("FriendsList\t" + friends + "\r\n").encode())
 
 # AddFriend \t NewFriendID \t UserID \r\n
 # AddFriend \t Success \r\n
@@ -307,7 +305,7 @@ def addFriend(request, connectionSocket):
     userID = request[2]
     cursor.execute("insert into friends values(?, ?)", [newFriend, userID])
 
-    connectionSocket.send("AddFriend\tSuccess\r\n")
+    connectionSocket.send("AddFriend\tSuccess\r\n".encode())
 
 
 
@@ -321,7 +319,7 @@ def getFriendStatus(request, connectionSocket):
 
     friend = OverView.findUserByID(friendID)
 
-    connectionSocket.send("FriendStatus\tSuccess\t" + friend.status + "\r\n" )
+    connectionSocket.send(("FriendStatus\tSuccess\t" + friend.status + "\r\n").encode())
     return 1
 
 
@@ -346,8 +344,6 @@ def getOfflineMessages(request, connectionSocket):
     for i in range(len(loadmessages)):
         user = OverView.findUserByID( loadmessages[i][1])
         messages.append( {'User': user.name, 'Message': loadmessages[i][2], 'Time': loadmessages[i][3], 'RoomID': loadmessages[i][4] })
-
-
     print("getOfflineMessages")
 
 
