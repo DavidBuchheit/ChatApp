@@ -354,7 +354,7 @@ def removeFriend(request, connectionSocket):
     remove = cursor.execute("delete from friends where firstFriendID = ? and secondFriendID = ?", [firstFriend, secondFriend])
     database.commit()
 
-    connectionSocket.send("RemoveFriend\tSuccess\r\n")
+    connectionSocket.send("RemoveFriend\tSuccess\r\n".encode())
 
 # FriendStatus \t FriendID \r\n
 # FriendStatus \t Success \t Status \r\n
