@@ -1,8 +1,10 @@
 import sys
 from tkinter import *
 from socket import *
+import threading
 import platform
 import atexit
+import os
 import unicodedata
 
 
@@ -19,9 +21,10 @@ class Friend:
 
 
 class Message:
-    def __init__(self, name, messageId):
-        self.name = name
-        self.messageId = messageId
+    def __init__(self, message, sender, roomId):
+        self.message = message
+        self.sender = sender
+        self.roomId = roomId
 
 
 class Application(Tk):
@@ -58,6 +61,7 @@ class Application(Tk):
         self.friendsGroupFrame = Listbox(self)
         self.groupsFrame = Listbox(self)
 
+
         connected = False
         try:
             self.serverSocket.connect((self.serverName, self.serverPort))
@@ -85,9 +89,19 @@ class Application(Tk):
             self.show_frame("FailedConnection")
 
 
+    def exit(self):
+        # logout user if they are logged in
+        #looper.cancel()
+        try:
+            self.serverSocket.send("logout".encode())
+            self.serverSocket.close()
+        except:
+            print("Already logged out")
+        os._exit(0)
+
+
     def refreshClient(self):
         '''refresh messages, groups, and friends'''
-
         #refresh rooms
         self.roomsArray = []
         command = "RoomsInfo"
@@ -95,7 +109,8 @@ class Application(Tk):
         returnedRooms = self.serverSocket.recv(1024).decode('ascii')
         print(returnedRooms)
         returnedRooms = returnedRooms.split('\t')
-        returnedRooms = returnedRooms[1].__str__()
+        if(len(returnedRooms) > 1):
+            returnedRooms = returnedRooms[1].__str__()
 
         rooms = self.grabObjectsFromString(returnedRooms)
 
@@ -114,11 +129,13 @@ class Application(Tk):
         returnedFriends = self.serverSocket.recv(1024).decode('ascii')
         print(returnedFriends)
         returnedFriends = returnedFriends.split('\t')
-        returnedFriends = returnedFriends[1].__str__()
+        if(len(returnedFriends) > 1):
+            returnedFriends = returnedFriends[1].__str__()
 
         friends = self.grabObjectsFromString(returnedFriends)
 
         for f in friends:
+            print(f)
             friendName = (f.split(',')[0].__str__().split(':')[1])
             friendName = friendName[2:-1]
             friendId = int((f.split(',')[2].__str__().split(':')[1].split(' ')[1]))
@@ -132,7 +149,21 @@ class Application(Tk):
             command = "getOfflineMessages\t" + room.roomId.__str__()
             self.serverSocket.send(command.encode())
             returnedMessage = self.serverSocket.recv(1024).decode('ascii')
-            print(room.roomId.__str__() + " : " + returnedMessage)
+            returnedMessage = returnedMessage.split('\t')
+            returnedMessage = returnedMessage[1].__str__()
+
+            messages = self.grabObjectsFromString(returnedMessage)
+
+            for m in messages:
+                print(m)
+                sender = m.split(',')[0].__str__().split(':')[1]
+                sender = sender[2:-1]
+                message = m.split(',')[1].__str__().split(':')[1]
+                message = message[2:-1]
+                rId = int(m.split(',')[3].__str__().split(':')[1].split(' ')[1])
+                newMessage = Message(message, sender, rId)
+                print("(" + rId.__str__() + ") " + sender + ": " + message)
+                self.messagesArray.append(newMessage)
 
 
         #refresh lists
@@ -149,13 +180,13 @@ class Application(Tk):
             self.groupsFrame.insert(END, group.name)
 
 
-
-
     def toMessages(self):
         self.show_frame("MessagesApp")
+        self.refreshClient()
 
     def toFriends(self):
         self.show_frame("FriendsApp")
+        self.refreshClient()
 
     def show_frame(self, page_name):
         '''Show a frame for the given page name'''
@@ -171,6 +202,9 @@ class Application(Tk):
                 created = False
             elif arrString[i] == '}':
                 if created == False:
+                    objectStr.strip('\n')
+                    objectStr.strip('/')
+                    objectStr.strip(ascii(92))
                     objects.append(objectStr)
                     objectStr = ""
                     created = True
@@ -178,6 +212,25 @@ class Application(Tk):
                 objectStr += arrString[i]
 
         return objects
+
+    def isEmail(self, email):
+        ext = ""
+        isEmail = False
+        for i in range(0, len(email)):
+            if (email[i] == '@' and (i != 0 or i >= (len(email) - 1))):
+                isEmail = True
+
+            if (i >= (len(email) - 4)):
+                ext += email[i]
+
+        extensions = {'.com', '.net', '.org', '.edu', '.gov'}
+        if (isEmail):
+            isEmail = False
+            for e in extensions:
+                if (e == ext):
+                    isEmail = True
+
+        return isEmail
 
 
 class MessagesApp(Frame):
@@ -201,8 +254,11 @@ class MessagesApp(Frame):
         self.controller.groupsFrame.pack(side=TOP)
         self.yScroll['command'] = self.controller.groupsFrame.yview
 
-        openButton = Button(self, bg='red', fg='white', text='Open Group', width=320, command= lambda: self.create_room_window(self.selectedGroup))
-        openButton.pack(side=TOP)
+        openButton = Button(self, bg='blue', fg='white', text='Open Group', width=320, command= lambda: self.create_room_window(self.selectedGroup))
+        openButton.pack(side=TOP, pady=2)
+        leaveButton = Button(self, bg='red', fg='white', text='Leave Group', width=320,
+                            command=lambda: self.leaveGroup(self.selectedGroup))
+        leaveButton.pack(side=TOP, pady=2)
 
         addGroupFrame = Frame(self)
         addGroupFrame.pack(side=BOTTOM)
@@ -220,7 +276,7 @@ class MessagesApp(Frame):
 
     def create_room_window(self, roomNumber):
         if roomNumber > -1:
-            room = self.controller.roomsArray[roomNumber]
+            self.room = self.controller.roomsArray[roomNumber]
             large_font = ('Verdana', 30)
             window = Toplevel(self, takefocus=None)
             window.lift(aboveThis=None)
@@ -228,16 +284,58 @@ class MessagesApp(Frame):
             window.resizable(0, 1)
             window.iconbitmap('groupIcon.ico')
             toolbar = Frame(window, bg="blue")
-            Label(toolbar, text=room.name, bg="blue", fg="white", justify=CENTER).pack(side=TOP, padx=16, pady=2, expand=1)
+            Label(toolbar, text=self.room.name, bg="blue", fg="white", justify=CENTER).pack(side=TOP, padx=16, pady=2, expand=1)
             toolbar.pack(side=TOP, fill=X)
+
             messageFrame = Frame(window, bg='gray')
-            messageFrame.pack(side=BOTTOM, fill=X)
+            messageFrame.pack(side=TOP, fill=X)
             messageSend = Button(messageFrame, text='SEND', bg='blue', fg='white',
-                                 command=lambda: self.sendMessage(messageInput.get(), room.roomId))
+                                 command=lambda: self.sendMessage(self.messageInput.get(), self.room.roomId))
             messageSend.pack(side=RIGHT)
-            messageInput = Entry(messageFrame)
-            messageInput.pack(padx=2, pady=2, fill=X)
-            messageInput.focus_set()
+            self.messageInput = Entry(messageFrame)
+            self.messageInput.pack(padx=2, pady=2, fill=X)
+            self.messageInput.focus_set()
+
+            messageList = Frame(window)
+            self.messages = Text(messageList)
+
+
+            self.refreshMessages(self.room)
+
+            self.messages.pack()
+            messageList.pack(side=TOP)
+
+
+    def refreshMessages(self, room):
+        try:
+            self.roomThread = threading.Timer(1.0, self.refreshMessages, [room], {})
+        except:
+            self.roomThread.cancel()
+        else:
+            self.roomThread.start()
+            self.controller.refreshClient()
+            try:
+                self.messages.config(state=NORMAL)
+                self.messages.delete('1.0', END)
+                for i in range(len(self.controller.messagesArray)):
+                    m = self.controller.messagesArray[(len(self.controller.messagesArray) - i - 1)]
+                    if m.roomId == room.roomId:
+                        self.messages.insert(INSERT, m.sender + ": " + m.message + "\n", "a")
+                self.messages.config(state=DISABLED)
+            except:
+                self.roomThread.cancel()
+
+
+
+    def leaveGroup(self, roomNumber):
+        if roomNumber > -1:
+            room = self.controller.roomsArray[roomNumber]
+            command = "LeaveRoom\t" + room.roomId.__str__()
+            self.controller.serverSocket.send(command.encode())
+            print("leaveRoom")
+            print(self.controller.serverSocket.recv(1024).decode('ascii'))
+            self.controller.refreshClient()
+
 
     def sendMessage(self, message, roomId):
         if message != "" and message != "\n" and message.strip(' ') != "":
@@ -245,6 +343,9 @@ class MessagesApp(Frame):
             command = "SendMessage\t" + message + "\t" + roomId.__str__()
             self.controller.serverSocket.send(command.encode())
             print(self.controller.serverSocket.recv(1024).decode('ascii'))
+            self.controller.refreshClient()
+            self.refreshMessages(self.room)
+            self.messageInput.delete(0, 'end')
 
 
 class CreateGroupApp(Frame):
@@ -290,7 +391,9 @@ class CreateGroupApp(Frame):
         groupLabel.pack(side=TOP)
 
         self.groupLabel = Text(groupFrame)
+        self.groupLabel.config(state=NORMAL)
         self.groupLabel.insert(INSERT, "Please select group members", "a")
+        self.groupLabel.config(state=DISABLED)
         self.groupLabel.pack()
 
         self.groupNames = ""
@@ -303,14 +406,38 @@ class CreateGroupApp(Frame):
             self.groupNames += self.controller.friendsFrame.get(index)
             self.groupNames += "\n"
         self.groupNames = self.groupNames[:-1]
+        self.groupLabel.config(state=NORMAL)
         self.groupLabel.delete('1.0', END)
         self.groupLabel.insert(INSERT, self.groupNames, "a")
+        self.groupLabel.config(state=DISABLED)
 
     def createGroup(self):
-        print("Create Group: ")
+        if len(self.selectedMemebers) > 0:
+            name = self.gNameInput.get()
+            friends = []
+            for index in self.selectedMemebers:
+                friends.append(self.controller.friendsArray[index])
+
+            command = "CreateRoom\t" + name
+            self.controller.serverSocket.send(command.encode())
+            roomMessage = self.controller.serverSocket.recv(1024).decode('ascii')
+            roomId = roomMessage.split('\t')[1]
+            ownerId = roomMessage.split('\t')[2]
+            self.controller.serverSocket.send(
+                ("joinRoom\t" + ownerId + "\t" + roomId).encode())
+            print(self.controller.serverSocket.recv(1024).decode('ascii'))
+            for friend in friends:
+                print(friend.friendId.__str__() + " : " + roomId)
+                self.controller.serverSocket.send(
+                    ("joinRoom\t" + friend.friendId.__str__() + "\t" + roomId.__str__()).encode())
+                print(self.controller.serverSocket.recv(1024).decode('ascii'))
+
+            print("Create Group: ")
+        self.toMessages()
 
     def toMessages(self):
         self.controller.show_frame("MessagesApp")
+        self.controller.refreshClient()
 
 
 class FriendsApp(Frame):
@@ -340,7 +467,8 @@ class FriendsApp(Frame):
 
         addFriendFrame = LabelFrame(self, text="Input an email to add friends:", width=320)
         addFriendFrame.pack(side=BOTTOM)
-        addButton = Button(addFriendFrame, bg='blue', fg='white', text='Add Friend', width=320)
+        addButton = Button(addFriendFrame, bg='blue', fg='white', text='Add Friend', width=320,
+                           command= lambda : self.addFriend(self.fInput.get()))
         addButton.pack(side=BOTTOM, padx=16, pady=4)
         self.fInput = Entry(addFriendFrame, bg='white', width=320)
         self.fInput.pack(side=BOTTOM, padx=16, pady=4)
@@ -350,13 +478,21 @@ class FriendsApp(Frame):
         if len(self.controller.friendsGroupFrame.curselection()) > 0:
             self.selectedFriend = self.controller.friendsGroupFrame.curselection()[0]
 
-    def addFriend(self):
-        self.controller.refreshClient()
-        print("Add Friend:")
+    def addFriend(self, email):
+        if self.controller.isEmail(email):
+            command = "AddFriend\t" + email
+            print(command)
+            self.controller.serverSocket.send(command.encode())
+            print(self.controller.serverSocket.recv(1024).decode('ascii'))
+            self.controller.refreshClient()
+            print("Add Friend:")
 
     def removeFriend(self):
         if self.selectedFriend >= 0:
-            #self.controller.friendsArray[self.selectedFriend].friendId
+            friendId = self.controller.friendsArray[self.selectedFriend].friendId
+            command = "RemoveFriend\t"+friendId.__str__()
+            self.controller.serverSocket.send(command.encode())
+            print(self.controller.serverSocket.recv(1024).decode('ascii'))
             self.selectedFriend = -1
             self.controller.refreshClient()
 
@@ -416,8 +552,7 @@ class LoginApp(Frame):
         self.pInput.grid(columnspan=2, sticky='w', padx=8)
 
         self.remember = BooleanVar()
-        self.stayLogged = Checkbutton(dialog_frame, text="Remember credentials", variable=self.remember)
-        self.stayLogged.grid(columnspan=2, padx=8, pady=4)
+
         Label(dialog_frame, text="").grid(columnspan=2)
 
         button_frame = Frame(self)
@@ -438,21 +573,7 @@ class LoginApp(Frame):
         email = self.eInput.get()
         password = self.pInput.get()
 
-        ext = ""
-        isEmail = False
-        for i in range(0, len(email)):
-            if(email[i] == '@' and (i != 0 or i >= (len(email) - 1))):
-                isEmail = True
-
-            if(i >= (len(email) - 4)):
-                ext += email[i]
-
-        extensions = {'.com', '.net', '.org', '.edu', '.gov'}
-        if(isEmail):
-            isEmail = False
-            for e in extensions:
-                if(e == ext):
-                    isEmail = True
+        isEmail = self.controller.isEmail(email)
 
         if (password == '' or email == ''):
             error = "Please fill out all fields!"
@@ -589,14 +710,11 @@ class RegisterApp(Frame):
     def toLogin(self):
         self.controller.show_frame("LoginApp")
 
-
-def exithandler():
-    #logout user if they are logged in
-    print('Logging out')
-
+def exit():
+    print("EXIT")
 
 if __name__ == "__main__":
-    atexit.register(exithandler)
+    atexit.register(exit)
     app = Application()
     app.mainloop()
 

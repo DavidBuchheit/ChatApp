@@ -53,7 +53,8 @@ def createEverything():
         for j in range(len(people)):
             for k in range(len(OverView.users)):
                 if(OverView.users[k].id == people[j][0]):
-                    room.joinUser(OverView.users[k])
+                    room.joinUser(OverView.users[k].id)
+        print(room.players.__str__())
         OverView.rooms.append(room)
 
     print("Rooms & Users populated")
@@ -68,12 +69,15 @@ def joinRoom(request, connectionSocket):
     UserID =  int(request[1])
     roomID = int(request[2])
 
+    OverView.addUser(roomID, UserID)
+
     database = lite.connect('user.db')
     cursor = database.cursor()
-    cursor.execute("insert into roomMembers values(roomID = ?, userID = ?)", [roomID, UserID])
+    cursor.execute("insert into roomMembers(roomID, userID) values (?, ?)", [roomID, UserID])
+    database.commit()
+    connectionSocket.send("JoinRoom\tSuccess\r\n".encode())
 
-    connectionSocket.send("JoinRoom\tSuccess\r\n".encode() )
-
+    print("joinRoom")
     return 1
 
 # RoomsInfo \r\n
@@ -81,9 +85,12 @@ def joinRoom(request, connectionSocket):
 def getMyRooms(request, connectionSocket):
     user = OverView.findUserBySocket(connectionSocket)
     print("Get Rooms")
-    rooms = OverView.grabRoomsWithUser(user.id)
-    send = "YourRooms\t" + rooms.__str__()
-    connectionSocket.send( send.encode() )
+    if user != None:
+        rooms = OverView.grabRoomsWithUser(user.id)
+        send = "YourRooms\t" + rooms.__str__()
+        connectionSocket.send( send.encode() )
+    else:
+        connectionSocket.send("YourRooms".encode())
 
     return 1
 
@@ -100,7 +107,7 @@ def getRoomMembers(request, connectionSocket):
 
 # LeaveRoom \t roomID\r\n
 # LeaveRoom \t Success \t UserID \t RoomID \r\n
-def leaveRoom(connectionSocket, request):
+def leaveRoom(request, connectionSocket):
     #Removes User froom Room and sends all the other clients telling them that someone has left the room
     database = lite.connect('user.db')
     cursor = database.cursor()
@@ -112,11 +119,15 @@ def leaveRoom(connectionSocket, request):
     user = OverView.findUserBySocket(connectionSocket)
     userID = user.id
 
+    OverView.leaveRoom(roomID, userID)
+    OverView.leaveRoom(roomID, userID)
+
     delete = cursor.execute("delete from roomMembers where roomID = ? and userID = ?", (roomID, userID))
+    deleteOwner = cursor.execute("update rooms set ownerID = -1 where roomID = ? and ownerID = ?", (roomID, userID))
     database.commit()
 
     #Send back all room members and delete the room member from list
-
+    connectionSocket.send(("LeaveRoom\tSuccess").encode())
     print("leaveRoom")
 
 def main(connectionSocket):
@@ -135,6 +146,10 @@ def main(connectionSocket):
             sendPrivateMessage(request, connectionSocket)
         elif type[0] == "joinRoom":
             joinRoom(request, connectionSocket)
+        elif type[0] == "CreateRoom":
+            createRoom(request, connectionSocket)
+        elif type[0] == "LeaveRoom":
+            leaveRoom(request, connectionSocket)
         elif type[0] == "logout":
             logout(request, connectionSocket)
         elif type[0] == "createRoom":
@@ -143,6 +158,10 @@ def main(connectionSocket):
             getOfflineMessages(request, connectionSocket)
         elif type[0] == "FriendsList":
             printFriendsList(request, connectionSocket)
+        elif type[0] == "AddFriend":
+            addFriend(request, connectionSocket)
+        elif type[0] == "RemoveFriend":
+            removeFriend(request, connectionSocket)
         elif type[0] == "RoomsInfo":
             getMyRooms(request, connectionSocket)
 
@@ -164,8 +183,10 @@ def sendMessage(request, connectionSocket):
     database = lite.connect('user.db')
     cursor = database.cursor()
     insert = cursor.execute("insert into messages(userID, message, timeStamp, roomID) values(?, ? ,? ,? )",[user.id, message, addTime, roomID])
-    OverView.sendMessage(roomID, message, OverView.findUserBySocket(connectionSocket))
-
+    database.commit()
+    print(message)
+    OverView.sendMessage(roomID, message, connectionSocket)
+    connectionSocket.send(("SendMessage\tSuccess").encode())
     print("sendMessage")
 
 
@@ -186,6 +207,7 @@ def sendPrivateMessage(request, connectionSocket):
     timeStamp = time.time()
     receiver = OverView.findUserByID(receiverID)
     insert = cursor.execute("insert into privateMessages(toUser, fromUser, message, timeStamp) values(?, ?, ?, ? )", [receiverID, sender.id, message, timeStamp])
+    database.commit()
     connectionSocket.send(("SendPrivateMessage\tSuccess").encode())
 
 # GetPrivateMessages \t UserID \r\n   #Where UserID is friend
@@ -226,6 +248,13 @@ def createRoom(request, connectionSocket):
     cursor = database.cursor()
 
     cursor.execute("insert into rooms(name, ownerID, deleted) values(?, ?, 0)", [ roomname, owner.id ])
+    database.commit()
+    room = cursor.execute("select * from rooms where name = ? and ownerID = ? ", [roomname, owner.id])
+    room = room.fetchall()
+    roomID = room[0][0]
+    OverView.createRoom(owner.id, roomname, roomID)
+    connectionSocket.send(("CreateRoom\t" + roomID.__str__() + "\t" + owner.id.__str__() + "\r\n").encode())
+    print("CreateRoom")
     return 1
 
 # RegisterUser \t FirstName \t LastName \t Address \t Email \t password1 \r\n
@@ -242,9 +271,9 @@ def RegisterUser(request, connectionSocket):
     password = type[5]
     # Query for checking if user has an account already
     # Checks if all the current data exists and checks if email already is in database
-    values = (firstName, lastName, address, email)
+    values = (firstName, lastName, email)
     check = database.cursor()
-    test = check.execute("select count(*) from user where ( firstName = ? and lastName = ? and address = ?) or email = ?", values)
+    test = check.execute("select count(*) from user where ( firstName = ? and lastName = ?) or email = ?", values)
     if test.fetchone()[0] > 0: #if user already has info in DB. Send failure response
         print("Registration failure")
         database.close()
@@ -274,15 +303,15 @@ def RegisterUser(request, connectionSocket):
 # CheckLogin \t Failure \r\n
 def loginCheck(request, connectionSocket):
     database = lite.connect('user.db')
+    cursor = database.cursor()
     type = request.split("\t")
     email = type[1]
     password = type[2]
     password = password.strip('\r\n')
-    loginValues = (email, password)
-    loginCheck = database.execute("select count(*) from user where email = ? and password = ?", loginValues)
-    count = loginCheck.fetchall()[0][0]
-
-    if count < 1:
+    loginCheck = cursor.execute("select count(*) from user where email = ? and password = ? ", [email, password])
+    loginCheck = loginCheck.fetchall()
+    print(loginCheck.__str__())
+    if len(loginCheck) < 1:
         status = "CheckLogin\tFailure\r\n"
         connectionSocket.send(status.encode())
         database.close()
@@ -312,20 +341,22 @@ def printFriendsList(request, connectionSocket):
     database = lite.connect('user.db')
     cursor = database.cursor()
     user = OverView.findUserBySocket(connectionSocket)
+    if user != None:
+        users = cursor.execute("select distinct * from friends as f1, friends as f2 where f1.secondFriendID = f2.firstFriendID and f1.firstFriendID = f2.secondFriendID and (f1.firstFriendID = ?)", [user.id] )
+        users = users.fetchall()
 
-    users = cursor.execute("select distinct * from friends as f1, friends as f2 where f1.secondFriendID = f2.firstFriendID and f1.firstFriendID = f2.secondFriendID and (f1.firstFriendID = ?)", [user.id] )
-    users = users.fetchall()
+        friends = []
+        for i in range(len(users)):
+            secondPerson = OverView.findUserByID(users[i][1])
+            id = users[i][1]
+            friends.append( {"Name": secondPerson.name, "Status": secondPerson.status, "ID": id } )
 
-    friends = []
-    for i in range(len(users)):
-        secondPerson = OverView.findUserByID(users[i][1])
-        id = users[i][1]
-        friends.append( {"Name": secondPerson.name, "Status": secondPerson.status, "ID": id } )
+        friends = friends.__str__()
+        connectionSocket.send(("FriendsList\t" + friends + "\r\n").encode())
+    else:
+        connectionSocket.send(("FriendsList").encode())
 
-    friends = friends.__str__()
-    connectionSocket.send(("FriendsList\t" + friends + "\r\n").encode())
-
-# AddFriend \t NewFriendID \t UserID \r\n
+# AddFriend \t Email
 # AddFriend \t Success \r\n
 def addFriend(request, connectionSocket):
     database = lite.connect('user.db')
@@ -334,11 +365,18 @@ def addFriend(request, connectionSocket):
     request = request.strip("\r\n")
     request = request.split("\t")
 
-    newFriend = request[1]
-    userID = request[2]
-    cursor.execute("insert into friends values(?, ?)", [newFriend, userID])
+    newFriend = OverView.findUserByEmail(request[1])
+    if newFriend != None:
+        print(newFriend)
+        user = OverView.findUserBySocket(connectionSocket)
+        cursor.execute("insert into friends values(?, ?)", [newFriend.id, user.id])
+        cursor.execute("insert into friends values(?, ?)", [user.id, newFriend.id])
+        database.commit()
+        print("addFriend")
+        connectionSocket.send("AddFriend\tSuccess\r\n".encode())
+    else:
+        connectionSocket.send("AddFriend\tFailure\r\n".encode())
 
-    connectionSocket.send("AddFriend\tSuccess\r\n".encode())
 
 # RemoveFriend \t UserID \r\n
 # RemoveFriend \t Success \r\n
@@ -351,7 +389,7 @@ def removeFriend(request, connectionSocket):
 
     secondFriend = int(request[1])
     firstFriend = OverView.findUserBySocket(connectionSocket)
-    remove = cursor.execute("delete from friends where firstFriendID = ? and secondFriendID = ?", [firstFriend, secondFriend])
+    remove = cursor.execute("delete from friends where firstFriendID = ? and secondFriendID = ?", [firstFriend.id, secondFriend])
     database.commit()
 
     connectionSocket.send("RemoveFriend\tSuccess\r\n".encode())
@@ -386,12 +424,16 @@ def getOfflineMessages(request, connectionSocket):
     userID = user.id
     roomID = request[1]
 
-    loadmessages = cursor.execute("select messages.* from messages join user on user.id = messages.userID where user.id = ? and messages.roomID = ?", [userID, roomID] )
+    loadmessages = cursor.execute("select messages.* from messages join user on user.id = messages.userID and messages.roomID = ?", [roomID] )
+    loadmessages = loadmessages.fetchall()
     messages = []
     for i in range(len(loadmessages)):
         user = OverView.findUserByID( loadmessages[i][1])
         messages.append( {'User': user.name, 'Message': loadmessages[i][2], 'Time': loadmessages[i][3], 'RoomID': loadmessages[i][4] })
     print("getOfflineMessages")
+    messages = messages.__str__()
+    connectionSocket.send(("getOfflineMessages\t" + messages + "\r\n").encode())
+
 
 # Logout \r\n
 # Logout \t Success \r\n
@@ -400,7 +442,6 @@ def logout(request, connectionSocket):
     print("Logout")
     OverView.userLogout(connectionSocket)
     #update DB where their last online time is now and remove them from current users array
-
 
 
 if __name__ == '__main__':

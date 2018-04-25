@@ -15,27 +15,30 @@ class Room:
         # IncomingMessage \t Message \t RoomID \t Sender \t Time \r\n
         message = "IncomingMessage\t"
         message += message + "\t"
-        message += self.id + "\t"
-        message += sender + "\t"
-        message += time.time() + "\r\n"
-        for player in self.players:
-            if player.status != 1 and player.socket != "":
-                player.socket.send(message.encode())
+        message += self.id.__str__() + "\t"
+        message += sender.name + "\t"
+        message += time.time().__str__() + "\r\n"
 
     def lostUser(self, user):
-        realUser = OverView.findUserByID(user)
         #if room owner, delete room
-        if self.owner == realUser :
-            self.players = {}
+        if self.owner == int(user):
+            self.owner = -1
+
+        print(self.players.__str__())
+        try:
+            self.players.remove(int(user))
+        except ValueError:
+            print("Already removed")
+
+        if len(self.players) == 0:
             OverView.deleteRoom(self.name)
-            return 1
-        else:
-            self.players.pop(realUser)
-            return 0
+        return 0
 
     def containsUser(self, userID):
+        if self.owner == userID:
+            return True
         for player in self.players:
-            if player.id == userID:
+            if player == userID:
                 return True
         return False
 
@@ -73,8 +76,9 @@ class OverView:
         self.rooms.pop(roomName)
 
     def createRoom(self, Owner, Roomname, id):
-        self.rooms[Roomname] = Room(Owner, Roomname, id)
-        self.rooms[Roomname].joinUser(Owner)
+        newRoom = Room(Owner, Roomname, id)
+        newRoom.joinUser(Owner)
+        self.rooms.append(newRoom)
 
     def grabRoomsWithUser(self, userID):
         userRooms = []
@@ -87,12 +91,12 @@ class OverView:
         return userRooms
 
     def grabRooms(self, email=""):
-        roomsWithUser = {}
+        roomsWithUser = []
         for room in self.rooms:
             # if the email is in the room's players
             for player in room.players:
                 if player.email == email:
-                    roomsWithUser.pop(room)
+                    roomsWithUser.append(room)
                     break
 
         return roomsWithUser
@@ -106,7 +110,7 @@ class OverView:
 
     def userLogout(self, connectionSocket):
         for user in self.users:
-            if(user.connectionSocket == connectionSocket):
+            if(user.socket == connectionSocket):
                 user.status = 0
                 user.connectionSocket = ""
                 break
@@ -129,13 +133,13 @@ class OverView:
 
     def findUserByEmail(self, email):
         for user in self.users:
-            if (user.email == email):
+            if (user.email.upper() == email.upper()):
                 return user
 
     def sendMessage(self, roomID, message, socket):
         for room in self.rooms:
             if(room.id == roomID):
-                room.sendMessage( findUsrBySocket(socket), message)
+                room.sendMessage(self.findUserBySocket(socket), message)
                 break
 
     def getRoomMembers(self, roomID):
@@ -149,14 +153,11 @@ class OverView:
 
     def findRoomByID(self, roomID):
         for room in self.rooms:
-            if room.id == roomID:
+            print(room.id.__str__() + " : " + roomID.__str__())
+            if room.id == int(roomID):
                 return room
         return None
 
     def leaveRoom(self, roomID, userID):
-        room = findRoomByID(roomID)
-        returnRes = room.lostUser(userID)
-        if(returnRes == 1):
-            return 1
-        else:
-            return room.players
+        room = self.findRoomByID(roomID)
+        room.lostUser(userID)
