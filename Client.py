@@ -56,6 +56,7 @@ class Application(Tk):
         self.messagesArray = {}
         self.friendsFrame = Listbox(self)
         self.friendsGroupFrame = Listbox(self)
+        self.groupsFrame = Listbox(self)
 
         connected = False
         try:
@@ -120,7 +121,7 @@ class Application(Tk):
         for f in friends:
             friendName = (f.split(',')[0].__str__().split(':')[1])
             friendName = friendName[2:-1]
-            friendId = int((f.split(',')[1].__str__().split(':')[1].split(' ')[1]))
+            friendId = int((f.split(',')[2].__str__().split(':')[1].split(' ')[1]))
             newFriend = Friend(friendName, friendId)
             print(friendName + " : " + friendId.__str__())
             self.friendsArray.append(newFriend)
@@ -128,8 +129,25 @@ class Application(Tk):
         #refresh messages
         self.messagesArray = []
         for room in self.roomsArray:
-            command = "GetMessages\t" + room.roomId.__str__()
-            print(room.name + " : " + room.roomId.__str__())
+            command = "getOfflineMessages\t" + room.roomId.__str__()
+            self.serverSocket.send(command.encode())
+            returnedMessage = self.serverSocket.recv(1024).decode('ascii')
+            print(room.roomId.__str__() + " : " + returnedMessage)
+
+
+        #refresh lists
+        self.groupsFrame.delete(0, END)
+        self.friendsFrame.delete(0, END)
+        self.friendsGroupFrame.delete(0, END)
+        for friend in self.friendsArray:
+            # button for each friend
+            self.friendsFrame.insert(END, friend.name)
+            self.friendsGroupFrame.insert(END, friend.name)
+
+        for group in self.roomsArray:
+            # button for each group
+            self.groupsFrame.insert(END, group.name)
+
 
 
 
@@ -175,12 +193,16 @@ class MessagesApp(Frame):
         roomsFrame.pack(side=TOP)
 
         #get rooms from User by sending a request to the server and recieving the information
+        self.selectedGroup = -1
+        self.yScroll = Scrollbar(roomsFrame, orient=VERTICAL)
+        self.yScroll.pack(side=RIGHT, fill=Y)
+        self.controller.groupsFrame = Listbox(roomsFrame, selectmode=SINGLE, width=320, yscrollcommand=self.yScroll.set)
+        self.controller.groupsFrame.bind('<<ListboxSelect>>', self.CurSelet)
+        self.controller.groupsFrame.pack(side=TOP)
+        self.yScroll['command'] = self.controller.groupsFrame.yview
 
-
-        for room in self.controller.roomsArray:
-            #button for each friend
-            rButton = Button(roomsFrame, bg='gray', fg='black', text=room, width=320, justify=RIGHT, command=lambda : self.create_room_window(room))
-            rButton.pack(side=TOP, pady=2, padx=2)
+        openButton = Button(self, bg='red', fg='white', text='Open Group', width=320, command= lambda: self.create_room_window(self.selectedGroup))
+        openButton.pack(side=TOP)
 
         addGroupFrame = Frame(self)
         addGroupFrame.pack(side=BOTTOM)
@@ -190,23 +212,39 @@ class MessagesApp(Frame):
     def createGroup(self):
         self.controller.show_frame("CreateGroupApp")
 
-    def create_room_window(self, room):
-        large_font = ('Verdana', 30)
-        window = Toplevel(self, takefocus=None)
-        window.lift(aboveThis=None)
-        window.minsize(320, 320)
-        window.resizable(0, 1)
-        window.iconbitmap('groupIcon.ico')
-        toolbar = Frame(window, bg="blue")
-        Label(toolbar, text=room, bg="blue", fg="white", justify=CENTER).pack(side=TOP, padx=16, pady=2, expand=1)
-        toolbar.pack(side=TOP, fill=X)
-        messageFrame = Frame(window, bg='gray')
-        messageFrame.pack(side=BOTTOM, fill=X)
-        messageSend = Button(messageFrame, text='SEND', bg='blue', fg='white')
-        messageSend.pack(side=RIGHT)
-        messageInput = Entry(messageFrame)
-        messageInput.pack(padx=2, pady=2, fill=X)
-        messageInput.focus_set()
+
+    def CurSelet(self, evt):
+        if len(self.controller.groupsFrame.curselection()) > 0:
+            self.selectedGroup = self.controller.groupsFrame.curselection()[0]
+
+
+    def create_room_window(self, roomNumber):
+        if roomNumber > -1:
+            room = self.controller.roomsArray[roomNumber]
+            large_font = ('Verdana', 30)
+            window = Toplevel(self, takefocus=None)
+            window.lift(aboveThis=None)
+            window.minsize(320, 320)
+            window.resizable(0, 1)
+            window.iconbitmap('groupIcon.ico')
+            toolbar = Frame(window, bg="blue")
+            Label(toolbar, text=room.name, bg="blue", fg="white", justify=CENTER).pack(side=TOP, padx=16, pady=2, expand=1)
+            toolbar.pack(side=TOP, fill=X)
+            messageFrame = Frame(window, bg='gray')
+            messageFrame.pack(side=BOTTOM, fill=X)
+            messageSend = Button(messageFrame, text='SEND', bg='blue', fg='white',
+                                 command=lambda: self.sendMessage(messageInput.get(), room.roomId))
+            messageSend.pack(side=RIGHT)
+            messageInput = Entry(messageFrame)
+            messageInput.pack(padx=2, pady=2, fill=X)
+            messageInput.focus_set()
+
+    def sendMessage(self, message, roomId):
+        if message != "" and message != "\n" and message.strip(' ') != "":
+            print("Send : " + message + " : " + roomId.__str__())
+            command = "SendMessage\t" + message + "\t" + roomId.__str__()
+            self.controller.serverSocket.send(command.encode())
+            print(self.controller.serverSocket.recv(1024).decode('ascii'))
 
 
 class CreateGroupApp(Frame):
@@ -236,10 +274,6 @@ class CreateGroupApp(Frame):
         self.controller.friendsFrame.bind('<<ListboxSelect>>', self.CurSelect)
         self.controller.friendsFrame.pack()
         self.yScroll['command'] = self.controller.friendsFrame.yview
-
-        for friend in self.controller.friendsArray:
-            # button for each friend
-            self.controller.friendsFrame.insert(END, friend)
 
         button_frame = Frame(self)
         button_frame.pack(side=BOTTOM)
@@ -301,11 +335,6 @@ class FriendsApp(Frame):
         self.controller.friendsGroupFrame.pack(side=TOP)
         self.yScroll['command'] = self.controller.friendsGroupFrame.yview
 
-        self.controller.friendsGroupFrame.delete(0, END)
-        for friend in self.controller.friendsArray:
-            #button for each friend
-            self.controller.friendsGroupFrame.insert(END, friend)
-
         removeButton = Button(self, bg='red', fg='white', text='Remove Friend', width=320, command=self.removeFriend)
         removeButton.pack(side=TOP)
 
@@ -327,13 +356,7 @@ class FriendsApp(Frame):
 
     def removeFriend(self):
         if self.selectedFriend >= 0:
-            del self.controller.friendsArray[self.selectedFriend]
-            self.controller.friendsGroupFrame.delete(0, END)
-            self.controller.friendsFrame.delete(0, END)
-            for friend in self.controller.friendsArray:
-                # button for each friend
-                self.controller.friendsGroupFrame.insert(END, friend)
-                self.controller.friendsFrame.insert(END, friend)
+            #self.controller.friendsArray[self.selectedFriend].friendId
             self.selectedFriend = -1
             self.controller.refreshClient()
 
