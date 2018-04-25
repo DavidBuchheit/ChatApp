@@ -34,6 +34,7 @@ class Application(Tk):
         # get friends from User by sending a request to the server and recieving the information
         self.friendsArray = []
         self.roomsArray = []
+        self.messagesArray = []
         self.friendsFrame = Listbox(self)
         self.friendsGroupFrame = Listbox(self)
 
@@ -66,7 +67,7 @@ class Application(Tk):
 
     def refreshClient(self):
         '''refresh messages, groups, and friends'''
-        #refresh friends
+        #refresh rooms
         command = "RoomsInfo"
         self.serverSocket.send(command.encode())
         returnedRooms = self.serverSocket.recv(1024).decode('ascii')
@@ -88,7 +89,6 @@ class MessagesApp(Frame):
     def __init__(self, master, controller):
         Frame.__init__(self, master)
         self.controller = controller
-        self.controller.refreshClient()
 
         toolbar = Frame(self, bg="blue")
         self.controller.menu.add_cascade(label="MENU", menu=self.controller.selectionMenu)
@@ -100,7 +100,7 @@ class MessagesApp(Frame):
         #get rooms from User by sending a request to the server and recieving the information
 
 
-        for room in self.roomsArray:
+        for room in self.controller.roomsArray:
             #button for each friend
             rButton = Button(roomsFrame, bg='gray', fg='black', text=room, width=320, justify=RIGHT, command=lambda : self.create_room_window(room))
             rButton.pack(side=TOP, pady=2, padx=2)
@@ -375,6 +375,7 @@ class LoginApp(Frame):
                 error = "Login Completed!"
                 self.controller.show_frame("MessagesApp")
                 self.controller.config(menu=self.controller.menu)
+                self.controller.refreshClient()
             else:
                 error = "Login Failed!"
 
