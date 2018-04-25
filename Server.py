@@ -226,9 +226,6 @@ def createRoom(request, connectionSocket):
     cursor = database.cursor()
 
     cursor.execute("insert into rooms(name, ownerID, deleted) values(?, ?, 0)", [ roomname, owner.id ])
-
-
-
     return 1
 
 # RegisterUser \t FirstName \t LastName \t Address \t Email \t password1 \r\n
@@ -343,7 +340,21 @@ def addFriend(request, connectionSocket):
 
     connectionSocket.send("AddFriend\tSuccess\r\n".encode())
 
+# RemoveFriend \t UserID \r\n
+# RemoveFriend \t Success \r\n
+def removeFriend(request, connectionSocket):
+    database = lite.connect('user.db')
+    cursor = database.cursor()
 
+    request = request.strip("\r\n")
+    request = request.split("\t")
+
+    secondFriend = int(request[1])
+    firstFriend = OverView.findUserBySocket(connectionSocket)
+    remove = cursor.execute("delete from friends where firstFriendID = ? and secondFriendID = ?", [firstFriend, secondFriend])
+    database.commit()
+
+    connectionSocket.send("RemoveFriend\tSuccess\r\n".encode())
 
 # FriendStatus \t FriendID \r\n
 # FriendStatus \t Success \t Status \r\n

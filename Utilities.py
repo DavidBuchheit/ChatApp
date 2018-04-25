@@ -127,6 +127,11 @@ class OverView:
             if( user.socket == socket):
                 return user
 
+    def findUserByEmail(self, email):
+        for user in self.users:
+            if (user.email == email):
+                return user
+
     def sendMessage(self, roomID, message, socket):
         for room in self.rooms:
             if(room.id == roomID):
