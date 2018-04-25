@@ -155,7 +155,3 @@ class OverView:
             return 1
         else:
             return room.players
-
-
-
-
