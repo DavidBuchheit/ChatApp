@@ -245,6 +245,7 @@ class FriendsApp(Frame):
             self.selectedFriend = self.controller.friendsGroupFrame.curselection()[0]
 
     def addFriend(self):
+        self.controller.refreshClient()
         print("Add Friend:")
 
     def removeFriend(self):
@@ -257,6 +258,7 @@ class FriendsApp(Frame):
                 self.controller.friendsGroupFrame.insert(END, friend)
                 self.controller.friendsFrame.insert(END, friend)
             self.selectedFriend = -1
+            self.controller.refreshClient()
 
 
 class FailedConnection(Frame):
