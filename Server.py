@@ -121,6 +121,8 @@ def main(connectionSocket):
             getOfflineMessages(request, connectionSocket)
         elif type[0] == "FriendsList":
             printFriendsList(request, connectionSocket)
+        elif type[0] == "RoomsInfo":
+            getMyRooms(request, connectionSocket)
 
 
 
