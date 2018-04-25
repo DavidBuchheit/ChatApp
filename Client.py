@@ -5,7 +5,6 @@ from Utilities import User, Room
 import platform
 import atexit
 import unicodedata
-
 class Application(Tk):
     def __init__(self, *args, **kwargs):
         Tk.__init__(self, *args, **kwargs)
@@ -31,20 +30,22 @@ class Application(Tk):
 
         self.serverPort = 12010
         self.serverName = "localhost" #I.P Address
-        self.clientSocket = socket(AF_INET, SOCK_STREAM)
+        self.serverSocket = socket(AF_INET, SOCK_STREAM)
         # get friends from User by sending a request to the server and recieving the information
         self.friendsArray = []
+        self.roomsArray = []
         self.friendsFrame = Listbox(self)
+        self.friendsGroupFrame = Listbox(self)
 
         connected = False
         try:
-            self.clientSocket.connect((self.serverName, self.serverPort))
+            self.serverSocket.connect((self.serverName, self.serverPort))
             connected = True
         except Exception as e:
             print("Something went wrong:")
             print(e)
             connected = False
-            self.clientSocket.close()
+            self.serverSocket.close()
 
         self.frames = {}
         for F in (MessagesApp, FriendsApp, CreateGroupApp, FailedConnection, LoginApp, RegisterApp):
@@ -63,6 +64,14 @@ class Application(Tk):
             self.show_frame("FailedConnection")
 
 
+    def refreshClient(self):
+        '''refresh messages, groups, and friends'''
+        #refresh friends
+        command = "RoomsInfo"
+        self.serverSocket.send(command.encode())
+        returnedRooms = self.serverSocket.recv(1024).decode('ascii')
+        print(returnedRooms)
+
     def toMessages(self):
         self.show_frame("MessagesApp")
 
@@ -79,6 +88,7 @@ class MessagesApp(Frame):
     def __init__(self, master, controller):
         Frame.__init__(self, master)
         self.controller = controller
+        self.controller.refreshClient()
 
         toolbar = Frame(self, bg="blue")
         self.controller.menu.add_cascade(label="MENU", menu=self.controller.selectionMenu)
@@ -88,9 +98,9 @@ class MessagesApp(Frame):
         roomsFrame.pack(side=TOP)
 
         #get rooms from User by sending a request to the server and recieving the information
-        roomsArray = {'David Buchheit'}
 
-        for room in roomsArray:
+
+        for room in self.roomsArray:
             #button for each friend
             rButton = Button(roomsFrame, bg='gray', fg='black', text=room, width=320, justify=RIGHT, command=lambda : self.create_room_window(room))
             rButton.pack(side=TOP, pady=2, padx=2)
@@ -209,15 +219,15 @@ class FriendsApp(Frame):
         friendsList.pack(side=TOP)
         self.yScroll = Scrollbar(friendsList, orient=VERTICAL)
         self.yScroll.pack(side=RIGHT, fill=Y)
-        self.friendsListFrame = Listbox(friendsList, selectmode=SINGLE, width=320, yscrollcommand=self.yScroll.set)
-        self.friendsListFrame.bind('<<ListboxSelect>>', self.CurSelet)
-        self.friendsListFrame.pack(side=TOP)
-        self.yScroll['command'] = self.friendsListFrame.yview
+        self.controller.friendsGroupFrame = Listbox(friendsList, selectmode=SINGLE, width=320, yscrollcommand=self.yScroll.set)
+        self.controller.friendsGroupFrame.bind('<<ListboxSelect>>', self.CurSelet)
+        self.controller.friendsGroupFrame.pack(side=TOP)
+        self.yScroll['command'] = self.controller.friendsGroupFrame.yview
 
-        self.friendsListFrame.delete(0, END)
+        self.controller.friendsGroupFrame.delete(0, END)
         for friend in self.controller.friendsArray:
             #button for each friend
-            self.friendsListFrame.insert(END, friend)
+            self.controller.friendsGroupFrame.insert(END, friend)
 
         removeButton = Button(self, bg='red', fg='white', text='Remove Friend', width=320, command=self.removeFriend)
         removeButton.pack(side=TOP)
@@ -229,9 +239,10 @@ class FriendsApp(Frame):
         self.fInput = Entry(addFriendFrame, bg='white', width=320)
         self.fInput.pack(side=BOTTOM, padx=16, pady=4)
 
+
     def CurSelet(self, evt):
-        if len(self.friendsListFrame.curselection()) > 0:
-            self.selectedFriend = self.friendsListFrame.curselection()[0]
+        if len(self.controller.friendsGroupFrame.curselection()) > 0:
+            self.selectedFriend = self.controller.friendsGroupFrame.curselection()[0]
 
     def addFriend(self):
         print("Add Friend:")
@@ -239,15 +250,13 @@ class FriendsApp(Frame):
     def removeFriend(self):
         if self.selectedFriend >= 0:
             del self.controller.friendsArray[self.selectedFriend]
-            self.friendsListFrame.delete(0, END)
+            self.controller.friendsGroupFrame.delete(0, END)
             self.controller.friendsFrame.delete(0, END)
             for friend in self.controller.friendsArray:
                 # button for each friend
-                self.friendsListFrame.insert(END, friend)
+                self.controller.friendsGroupFrame.insert(END, friend)
                 self.controller.friendsFrame.insert(END, friend)
             self.selectedFriend = -1
-
-
 
 
 class FailedConnection(Frame):
@@ -271,16 +280,16 @@ class FailedConnection(Frame):
 
     def reconnect(self):
         print("Trying to reconnect...")
-        self.controller.clientSocket = socket(AF_INET, SOCK_STREAM)
+        self.controller.serverSocket = socket(AF_INET, SOCK_STREAM)
         connected = False
         try:
-            self.controller.clientSocket.connect((self.controller.serverName, self.controller.serverPort))
+            self.controller.serverSocket.connect((self.controller.serverName, self.controller.serverPort))
             connected = True
         except Exception as e:
             print("Something went wrong:")
             print(e)
             connected = False
-            self.controller.clientSocket.close()
+            self.controller.serverSocket.close()
 
         if(connected):
             self.controller.show_frame("LoginApp")
@@ -357,8 +366,8 @@ class LoginApp(Frame):
                     encoded = ''.join(map(bin,bytearray(coded,'utf8')))
                     myfile.write(encoded.encode())
                     myfile.close()
-            self.controller.clientSocket.send(message.encode())
-            response = self.controller.clientSocket.recv(1024).decode('ascii')
+            self.controller.serverSocket.send(message.encode())
+            response = self.controller.serverSocket.recv(1024).decode('ascii')
             type = response.split("\t")
             print(message + '\n Status: ' + type[1])
             if("Success".upper() in type[1].upper()):
@@ -460,8 +469,8 @@ class RegisterApp(Frame):
             message += (address + '\t')
             message += (email + '\t')
             message += (password + '\r\n')
-            self.controller.clientSocket.send(message.encode())
-            response = self.controller.clientSocket.recv(1024).decode('ascii')
+            self.controller.serverSocket.send(message.encode())
+            response = self.controller.serverSocket.recv(1024).decode('ascii')
             type = response.split("\t")
             print(message + '\n Status: ' + type[1])
             if("Success".upper() in type[1].upper()):
