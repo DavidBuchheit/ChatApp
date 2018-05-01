@@ -287,6 +287,7 @@ def RegisterUser(request, connectionSocket):
         insert = cur.execute("insert into user(firstName, lastName, address, email, password) values (?, ?, ?, ?, ?)", vals)
         lastRowID = cur.lastrowid
         database.commit()
+        OverView.users.append(User(connectionSocket, cur.lastrowid,  firstName + " " + lastName,  email, 1)) #add user to users right away
         database.close()
         response = "RegisterUser\tSuccess\r\n"
 
@@ -367,8 +368,8 @@ def addFriend(request, connectionSocket):
 
     newFriend = OverView.findUserByEmail(request[1])
     if newFriend != None:
-        print(newFriend)
         user = OverView.findUserBySocket(connectionSocket)
+        print(user)
         cursor.execute("insert into friends values(?, ?)", [newFriend.id, user.id])
         cursor.execute("insert into friends values(?, ?)", [user.id, newFriend.id])
         database.commit()

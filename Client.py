@@ -156,11 +156,28 @@ class Application(Tk):
 
             for m in messages:
                 print(m)
-                sender = m.split(',')[0].__str__().split(':')[1]
-                sender = sender[2:-1]
-                message = m.split(',')[1].__str__().split(':')[1]
-                message = message[2:-1]
-                rId = int(m.split(',')[3].__str__().split(':')[1].split(' ')[1])
+                sender = "Failed"
+                message = "Getting Messages"
+                m = m.split(',')
+                rId = -1
+                try:
+                    sender = m[0].__str__().split(':')[1]
+                    sender = sender[2:-1]
+                except Exception as e:
+                    print(format(e))
+
+                try:
+                    message = m[1].__str__().split(':')[1]
+                    message = message[2:-1]
+                except Exception as e:
+                    print(format(e))
+
+                try:
+                    rId = int((m[3].__str__().split(':')[1]))
+                    print(rId.__str__())
+                except Exception as e:
+                    print(format(e))
+
                 newMessage = Message(message, sender, rId)
                 print("(" + rId.__str__() + ") " + sender + ": " + message)
                 self.messagesArray.append(newMessage)

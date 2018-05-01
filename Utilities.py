@@ -121,6 +121,16 @@ class OverView:
                 room.joinUser(user)
                 break
 
+    def addUserToOverview(self, user):
+        alreadyIn = False
+        for u in self.users:
+            if(user.id == u.id):
+                alreadyIn = True
+                break
+
+        if(alreadyIn == False):
+            self.users.append(user)
+
     def findUserByID(self, userID):
         for user in self.users:
             if( int(user.id) == userID):
