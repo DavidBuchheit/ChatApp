@@ -259,6 +259,12 @@ class MessagesApp(Frame):
         self.controller.menu.add_cascade(label="MENU", menu=self.controller.selectionMenu)
         Label(toolbar, text="MESSAGES", bg="blue", fg="white", justify=CENTER).pack(side=TOP, padx=16, pady=2, expand=1)
         toolbar.pack(side=TOP, fill=X)
+
+        refreshFrame = Frame(self)
+        refreshFrame.pack(side=TOP)
+        refreshButton = Button(refreshFrame, bg='blue', fg='white', text='Refresh', width=320, command=self.refresh)
+        refreshButton.pack(side=TOP, padx=16, pady=4)
+
         roomsFrame = Frame(self)
         roomsFrame.pack(side=TOP)
 
@@ -290,6 +296,8 @@ class MessagesApp(Frame):
         if len(self.controller.groupsFrame.curselection()) > 0:
             self.selectedGroup = self.controller.groupsFrame.curselection()[0]
 
+    def refresh(self):
+        self.controller.refreshClient()
 
     def create_room_window(self, roomNumber):
         if roomNumber > -1:
